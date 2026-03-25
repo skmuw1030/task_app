@@ -1,6 +1,12 @@
-<h2>スタッフのタスクを見える化</h2>
-<h2>すきま時間を有効活用</h2>
 
-<%= link_to "ログイン",  new_user_session_path %>
-<%= link_to "新規登録", new_user_registration_path %>
-<%= button_to "ゲストログイン", guest_sign_in_path, method: :post %>
+
+<% if user_signed_in? %>
+  <h2>カンバンボード</h2>
+<% else %>
+  <h2>スタッフのタスクを見える化</h2>
+  <h2>すきま時間を有効活用</h2>
+
+  <%= link_to "ログイン",  new_user_session_path %>
+  <%= link_to "新規登録", new_user_registration_path %>
+  <%= button_to "ゲストログイン", guest_sign_in_path, method: :post %>
+<% end %>
