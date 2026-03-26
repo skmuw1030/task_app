@@ -1,0 +1,35 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  assignee_id: 1
+  title: MyString
+  status: MyString
+  priority: MyString
+  estimated_minutes: 1
+  due_date: 2026-03-26
+  assigned_date: 2026-03-26
+  started_at: 2026-03-26
+  completed_at: 2026-03-26
+  has_missing_docs: false
+  missing_doc_memo: MyText
+  missing_doc_requested_to: MyString
+  missing_doc_requested_date: 2026-03-26
+  comment: MyText
+
+two:
+  user: two
+  assignee_id: 1
+  title: MyString
+  status: MyString
+  priority: MyString
+  estimated_minutes: 1
+  due_date: 2026-03-26
+  assigned_date: 2026-03-26
+  started_at: 2026-03-26
+  completed_at: 2026-03-26
+  has_missing_docs: false
+  missing_doc_memo: MyText
+  missing_doc_requested_to: MyString
+  missing_doc_requested_date: 2026-03-26
+  comment: MyText
