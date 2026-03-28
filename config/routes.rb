@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get "tasks/index"
   devise_for :users, controllers: {
     sessions: "users/sessions"
   }
@@ -18,4 +17,6 @@ Rails.application.routes.draw do
   end
 
   root "home#index"
+
+  resources :tasks
 end

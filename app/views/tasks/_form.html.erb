@@ -1,0 +1,79 @@
+<%= form_with model: @task do |f| %>
+  <div>
+    <%= f.label :title, "タスク名" %>
+    <%= f.text_field :title %>
+    <% if @task.errors[:title].any? %>
+      <%= @task.errors.full_messages_for(:title).first %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :status, "ステータス" %>
+    <%= f.select :status, Task::STATUSES %>
+    <% if @task.errors[:status].any? %>
+      <%= @task.errors.full_messages_for(:status).first %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :priority, "優先度" %>
+    <%= f.select :priority, Task::PRIORITIES %>
+    <% if @task.errors[:priority].any? %>
+      <%= @task.errors.full_messages_for(:priority).first %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :estimated_minutes, "所要時間(分)" %>
+    <%= f.number_field :estimated_minutes, min: 0,  step:5 %>
+    <% if @task.errors[:estimated_minutes].any? %>
+      <%= @task.errors.full_messages_for(:estimated_minutes).first %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :due_date, "期限日" %>
+    <%= f.date_field :due_date %>
+  </div>
+
+  <div>
+    <%= f.label :assigned_date,"割当日" %>
+    <%= f.date_field :assigned_date %>
+  </div>
+
+  <div>
+    <%= f.label :has_missing_docs, "不足書類" %>
+    <%= f.check_box :has_missing_docs %>
+    <% if @task.errors[:has_missing_docs].any? %>
+      <%= @task.errors.full_messages_for(:has_missing_docs).first %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :missing_doc_memo, "不足内容" %>
+    <%= f.text_area :missing_doc_memo %>
+    <% if @task.errors[:missing_doc_memo].any? %>
+      <%= @task.errors.full_messages_for(:missing_doc_memo).first %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :missing_doc_requested_to, "担当者" %>
+    <%= f.text_field :missing_doc_requested_to %>
+    <% if @task.errors[:missing_doc_requested_to].any? %>
+      <%= @task.errors.full_messages_for(:missing_doc_requested_to).first %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :comment, "備考欄" %>
+    <%= f.text_area :comment %>
+    <% if @task.errors[:comment].any? %>
+      <%= @task.errors.full_messages_for(:comment).first %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.submit "タスクを登録" %>
+  </div>
+<% end %>

@@ -2,6 +2,11 @@
 
 <% if user_signed_in? %>
   <h2>カンバンボード</h2>
+
+  <% @tasks.each do |task| %>
+    <%= task.title %>
+    <%= task.creator.name %>
+  <% end %>
 <% else %>
   <h2>スタッフのタスクを見える化</h2>
   <h2>すきま時間を有効活用</h2>

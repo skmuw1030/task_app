@@ -5,7 +5,26 @@ class Task < ApplicationRecord
 
   has_many :sub_tasks, dependent: :destroy
 
-  validates :title, presence: true
-  validates :status, presence: true
-  validates :priority, presence: true
+  STATUSES = [ "未着手", "進行中", "完了" ]
+  PRIORITIES = [ "高", "中", "低" ]
+
+  validates :title, presence: true, length: { maximum: 50 }
+  validates :status, presence: true, inclusion: { in: STATUSES }
+  validates :priority, presence: true, inclusion: { in: PRIORITIES }
+  validates :estimated_minutes,
+            numericality: { only_integer: true, greater_than_or_equal_to: 0 },
+            allow_nil: true
+  validates :missing_doc_memo, length: { maximum: 500 }, presence: true, if: :has_missing_docs?
+  validates :missing_doc_requested_to, length: { maximum: 5 }, allow_blank: true
+  validates :comment, length: { maximum: 500 }
+
+  after_initialize :set_default_values, if: :new_record?
+
+  private
+
+  def set_default_values
+    self.status ||= "未着手"
+    self.priority ||= "中"
+    self.assigned_date ||= Date.today
+  end
 end
