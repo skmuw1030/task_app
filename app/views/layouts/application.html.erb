@@ -23,6 +23,7 @@
   <% if user_signed_in? %>
     <p><%= current_user.name %></p>
     <%= link_to "アカウント設定", edit_user_registration_path %>
+    <%= link_to "作成したタスク一覧", created_tasks_path %>
     <%= button_to "ログアウト", destroy_user_session_path, method: :delete %>
   <% end %>
     <%= yield %>

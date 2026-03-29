@@ -4,7 +4,7 @@
   <h2>カンバンボード</h2>
 
   <% @tasks.each do |task| %>
-    <%= task.title %>
+    <%= link_to task.title, task_path(task) %>
     <%= task.creator.name %>
   <% end %>
 <% else %>

@@ -18,5 +18,9 @@ Rails.application.routes.draw do
 
   root "home#index"
 
-  resources :tasks
+  resources :tasks do
+    collection do
+      get :created
+    end
+  end
 end

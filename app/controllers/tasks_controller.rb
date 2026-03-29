@@ -1,4 +1,6 @@
 class TasksController < ApplicationController
+  before_action :set_task, only: [ :show, :edit, :update, :destroy ]
+
   def index
     @tasks = current_user.created_tasks
   end
@@ -15,6 +17,36 @@ class TasksController < ApplicationController
       flash.now[:alert]="タスク登録に失敗しました"
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def show
+  end
+
+  def edit
+  end
+
+  def update
+    if @task.update(task_params)
+      redirect_to root_path, notice: "タスクを更新しました"
+    else
+      flash.now[:alert] = "タスクの更新に失敗しました"
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @task.destroy
+    redirect_to root_path, notice: "タスクを削除しました", status: :see_other
+  end
+
+  def created
+    @tasks = current_user.created_tasks.includes(:assignee)
+  end
+
+  private
+
+  def set_task
+    @task = current_user.created_tasks.find(params[:id])
   end
 
   private

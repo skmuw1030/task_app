@@ -1,0 +1,14 @@
+ja:
+  activerecord:
+    attributes:
+      task:
+        title: "タスク名"
+        status: "ステータス"
+        priority: "優先度"
+        estimated_minutes: "所要時間"
+        due_date: "期限日"
+        assigned_date: "割当日"
+        has_missing_docs: "不足書類"
+        missing_doc_memo: "不足内容"
+        missing_doc_requested_to: "担当者"
+        comment: "備考欄"
