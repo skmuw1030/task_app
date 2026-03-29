@@ -1,7 +1,14 @@
+<% 
+  is_new = @task.new_record?
+  is_creator = is_new || (@task.user_id == current_user.id)
+  is_assignee = @task.assignee_id == current_user.id
+%>
+
 <%= form_with model: @task do |f| %>
+
   <div>
     <%= f.label :title, "タスク名" %>
-    <%= f.text_field :title %>
+    <%= f.text_field :title, readonly: !is_creator %>
     <% if @task.errors[:title].any? %>
       <%= @task.errors.full_messages_for(:title).first %>
     <% end %>
@@ -9,7 +16,7 @@
 
   <div>
     <%= f.label :status, "ステータス" %>
-    <%= f.select :status, Task::STATUSES %>
+    <%= f.select :status, Task::STATUSES, {}, { disabled: !(is_creator || is_assignee) } %> 
     <% if @task.errors[:status].any? %>
       <%= @task.errors.full_messages_for(:status).first %>
     <% end %>
@@ -17,7 +24,11 @@
 
   <div>
     <%= f.label :priority, "優先度" %>
-    <%= f.select :priority, Task::PRIORITIES %>
+    <% if is_creator %>
+      <%= f.select :priority, Task::PRIORITIES %>
+    <% else %>
+      <%= f.text_field :priority, readonly: true %>
+    <% end %>
     <% if @task.errors[:priority].any? %>
       <%= @task.errors.full_messages_for(:priority).first %>
     <% end %>
@@ -25,7 +36,7 @@
 
   <div>
     <%= f.label :estimated_minutes, "所要時間(分)" %>
-    <%= f.number_field :estimated_minutes, min: 0,  step:5 %>
+    <%= f.number_field :estimated_minutes, min: 0,  step:5, readonly: !(is_creator || is_assignee) %>
     <% if @task.errors[:estimated_minutes].any? %>
       <%= @task.errors.full_messages_for(:estimated_minutes).first %>
     <% end %>
@@ -33,17 +44,17 @@
 
   <div>
     <%= f.label :due_date, "期限日" %>
-    <%= f.date_field :due_date %>
+    <%= f.date_field :due_date, readonly: !is_creator %>
   </div>
 
   <div>
     <%= f.label :assigned_date,"割当日" %>
-    <%= f.date_field :assigned_date %>
+    <%= f.date_field :assigned_date, readonly: !is_creator %>
   </div>
 
   <div>
     <%= f.label :has_missing_docs, "不足書類" %>
-    <%= f.check_box :has_missing_docs %>
+    <%= f.check_box :has_missing_docs, disabled: !(is_creator || is_assignee) %>
     <% if @task.errors[:has_missing_docs].any? %>
       <%= @task.errors.full_messages_for(:has_missing_docs).first %>
     <% end %>
@@ -51,7 +62,7 @@
 
   <div>
     <%= f.label :missing_doc_memo, "不足内容" %>
-    <%= f.text_area :missing_doc_memo %>
+    <%= f.text_area :missing_doc_memo, readonly: !(is_creator || is_assignee) %>
     <% if @task.errors[:missing_doc_memo].any? %>
       <%= @task.errors.full_messages_for(:missing_doc_memo).first %>
     <% end %>
@@ -59,7 +70,7 @@
 
   <div>
     <%= f.label :missing_doc_requested_to, "担当者" %>
-    <%= f.text_field :missing_doc_requested_to %>
+    <%= f.text_field :missing_doc_requested_to, readonly: !(is_creator || is_assignee) %>
     <% if @task.errors[:missing_doc_requested_to].any? %>
       <%= @task.errors.full_messages_for(:missing_doc_requested_to).first %>
     <% end %>
@@ -67,13 +78,13 @@
 
   <div>
     <%= f.label :comment, "備考欄" %>
-    <%= f.text_area :comment %>
+    <%= f.text_area :comment, readonly: !(is_creator || is_assignee) %>
     <% if @task.errors[:comment].any? %>
       <%= @task.errors.full_messages_for(:comment).first %>
     <% end %>
   </div>
 
   <div>
-    <%= f.submit "タスクを登録" %>
+    <%= f.submit @task.new_record? ? "タスクを登録" : "タスクを更新" %>
   </div>
 <% end %>

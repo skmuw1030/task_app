@@ -26,7 +26,7 @@ class TasksController < ApplicationController
   end
 
   def update
-    if @task.update(task_params)
+    if @task.update(task_params_by_role)
       redirect_to root_path, notice: "タスクを更新しました"
     else
       flash.now[:alert] = "タスクの更新に失敗しました"
@@ -66,9 +66,26 @@ class TasksController < ApplicationController
       :completed_at,
       :has_missing_docs,
       :missing_doc_memo,
+      :missing_doc_requested_to,
       :missing_doc_requested_date,
       :comment
 
     )
+  end
+
+  private
+
+  def task_params_by_role
+    if @task.user_id == current_user.id
+      task_params
+    else
+      params.require(:task).permit(
+        :status,
+        :estimated_minutes,
+        :has_missing_docs,
+        :missing_doc_memo,
+        :comment
+      )
+    end
   end
 end
