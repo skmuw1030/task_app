@@ -46,7 +46,9 @@ class TasksController < ApplicationController
   private
 
   def set_task
-    @task = current_user.created_tasks.find(params[:id])
+    @task = Task.where(user_id: current_user.id)
+                .or(Task.where(assignee_id: current_user.id))
+                .find(params[:id])
   end
 
   private
