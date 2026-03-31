@@ -9,4 +9,14 @@ class User < ApplicationRecord
   has_many :sub_tasks, through: :created_tasks
 
   validates :name, presence: true
+  validates :password, format: {
+    with: /\A(?=.*?[a-z])(?=.*?\d)[a-z\d]+\z/i,
+    message: "は英字と数字の両方を含めて設定してください"
+  }, if: :password_required?
+
+  private
+
+  def password_required?
+    !persisted? || !password.nil? || !password_confirmation.nil?
+  end
 end
