@@ -17,6 +17,8 @@ module TaskApp
     config.autoload_lib(ignore: %w[assets tasks])
     config.time_zone = "Tokyo"
     config.i18n.default_locale = :ja
+    # config/application.rb
+    config.action_view.field_error_proc = Proc.new { |html_tag, instance| html_tag }
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
