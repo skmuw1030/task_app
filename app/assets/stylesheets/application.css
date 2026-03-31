@@ -150,3 +150,53 @@ html, body {
 .submit-link:hover {
   color:#4FD1C5; 
 }
+
+.field-hint-container {
+  width: 85%;
+  margin: 5px auto 0;
+  text-align: right; 
+}
+
+.auth-alert {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  background-color: #FFF5F5; 
+  color: #C53030;           
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #FEB2B2;
+  font-size: 13px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.forget-password-link {
+  font-size: 14px;
+  color: #616161;
+  text-decoration: none;
+}
+
+.forget-password-link:hover {
+  text-decoration: underline;
+  color: #38B2AC;
+}
+
+.login-keep-box {
+  width: 85%;
+  margin: 15px auto;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #4A5568;
+}
+
+.keep-check {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.keep-label {
+  cursor: pointer;
+}

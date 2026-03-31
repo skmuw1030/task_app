@@ -1,26 +1,40 @@
-<h2>Log in</h2>
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+<h2 class="auth-title">ログイン</h2>
+
+<% if alert %>
+    <p class="auth-alert"><%= alert %></p>
+  <% end %>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
+    <%= f.label :email, class: "field-label" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input-field" %>
   </div>
 
   <div class="field">
-    <p><%= f.label :password %></p>
-    <p><%= f.password_field :password, autocomplete: "current-password" %></p>
+    <%= f.label :password, class: "field-label" %>
+    <%= f.password_field :password, autocomplete: "current-password", class: "input-field" %>
+
+    <div class="field-hint-container">
+      <%= link_to "パスワードをお忘れの方", new_password_path(resource_name), class: "forget-password-link" %>
+    </div>
   </div>
 
   <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <p><%= f.check_box :remember_me %></p>
-      <p><%= f.label :remember_me %></p>
+    <div class="login-keep-box">
+      <%= f.check_box :remember_me, class:"keep-check" %>
+      <%= f.label :remember_me, "ログイン状態を維持する", class:"keep-label" %>
     </div>
   <% end %>
 
   <div class="actions">
-    <%= f.submit "Log in" %>
+    <%= f.submit "ログイン", class: "submit-btn" %>
   </div>
 <% end %>
 
-<%= render "devise/shared/links" %>
+<div class="auth-footer">
+      アカウントをお持ちでない方は 
+      <%= link_to "新規登録", new_registration_path(resource_name), class: "submit-link" %>
+    </div>
