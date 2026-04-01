@@ -14,6 +14,7 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <%= javascript_importmap_tags %>
   </head>
 
@@ -25,12 +26,34 @@
         <% end %>
       </div>
     <% end %>
-    <% if user_signed_in? %>
-      <p><%= current_user.name %></p>
-      <%= link_to "アカウント設定", edit_user_registration_path %>
-      <%= link_to "作成したタスク一覧", created_tasks_path %>
-      <%= button_to "ログアウト", destroy_user_session_path, method: :delete %>
-    <% end %>
-    <%= yield %>
+
+    <header class="main-header">
+      <div class="header-container">
+        <%= link_to "TaskApp", root_path, class: "header-logo" %>
+
+        <nav class="header-nav">
+          <% if user_signed_in? %>
+            <div class="header-dropdown">
+              <button class="dropdown-trigger">
+                <i class="fa-solid fa-circle-user"></i><span class="user-name"><%= current_user.name %></span> さん
+                <i class="fa-solid fa-chevron-down arrow-icon"></i>
+              </button>
+          
+              <div class="dropdown-content">
+                <%= link_to "作成したタスク一覧", created_tasks_path, class: "dropdown-item" %>
+                <%= link_to "アカウント設定", edit_user_registration_path, class: "dropdown-item" %>
+                <hr class="dropdown-divider">
+                <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item logout-link" %>
+              </div>
+            </div>
+          <% else %>
+          <% end %>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <%= yield %>
+    </main>
   </body>
 </html>
