@@ -10,7 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_26_011433) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_04_133820) do
+  create_table "sub_tasks", force: :cascade do |t|
+    t.integer "task_id", null: false
+    t.integer "user_id", null: false
+    t.integer "assignee_id"
+    t.string "title", null: false
+    t.string "status", default: "未着手", null: false
+    t.date "due_date"
+    t.date "completed_at"
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignee_id"], name: "index_sub_tasks_on_assignee_id"
+    t.index ["task_id"], name: "index_sub_tasks_on_task_id"
+    t.index ["user_id"], name: "index_sub_tasks_on_user_id"
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "assignee_id"
@@ -48,6 +64,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_26_011433) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "sub_tasks", "tasks"
+  add_foreign_key "sub_tasks", "users"
+  add_foreign_key "sub_tasks", "users", column: "assignee_id"
   add_foreign_key "tasks", "users"
   add_foreign_key "tasks", "users", column: "assignee_id"
 end
