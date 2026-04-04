@@ -1,12 +1,52 @@
-
-
 <% if user_signed_in? %>
-  <h2>カンバンボード</h2>
 
-  <% @tasks.each do |task| %>
-    <%= link_to task.title, task_path(task) %>
-    <%= task.creator.name %>
-  <% end %>
+<div class="bg-[#FAFAF9] p-6 min-h-screen">
+    <h2 class="text-3xl font-bold text-slate-700 mb-6">My Board</h2>
+
+    <div class="flex flex-row items-start justify-center gap-6 overflow-x-auto pb-4">
+   
+      
+      <div class="flex-1 min-w-[300px] flex-shrink-0 bg-[#F5F3FF] rounded-2xl shadow-sm p-4">
+        <h3 class="mb-4 text-purple-900 flex justify-between">
+          未着手
+          <span class="bg-[#DDD6FE] text-xs px-2 py-1 rounded-full uppercase tracking-wider"><%= @todo_tasks.count %>件</span>
+        </h3>
+        <% @todo_tasks.each do |task| %>
+          <div class="bg-white p-4 rounded-2xl shadow-sm mb-3 ">
+             <%= link_to task.title, task_path(task) %>
+               <%= task.creator.name %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="flex-1 min-w-[300px] bg-[#EFF6FF] flex-shrink-0 rounded-2xl shadow-sm p-4">
+        <h3 class="mb-4 text-blue-900 flex justify-between">
+        進行中 
+        <span class="bg-[#BFDBFE] text-xs px-2 py-1 rounded-full uppercase tracking-wider"><%= @doing_tasks.count %>件</span>
+        </h3>
+        <% @doing_tasks.each do |task| %>
+          <div class="bg-white p-4 rounded-2xl shadow-sm mb-3 ">
+             <%= link_to task.title, task_path(task) %>
+               <%= task.creator.name %>
+          </div>
+          <% end %>
+      </div>
+
+      <div class="flex-1 min-w-[300px] flex-shrink-0  bg-[#E6FFFA] rounded-2xl shadow-sm p-4">
+        <h3 class="mb-4 text-teal-900 flex justify-between">
+        完了 
+        <span class="bg-[#99F6E4] text-xs px-2 py-1 rounded-full uppercase tracking-wider"><%= @done_tasks.count %>件</span>
+        </h3>
+        <% @done_tasks.each do |task| %>
+          <div class="bg-white p-4 rounded-2xl shadow-sm mb-3 ">
+             <%= link_to task.title, task_path(task) %>
+               <%= task.creator.name %>
+          </div>
+          <% end %>
+      </div>
+    </div>
+    </div>
+  </div>
 <% else %>
   <h2>スタッフのタスクを見える化</h2>
   <h2>すきま時間を有効活用</h2>
