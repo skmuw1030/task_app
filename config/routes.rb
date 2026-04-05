@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get "sub_tasks/new"
+  get "sub_tasks/create"
+  get "sub_tasks/edit"
+  get "sub_tasks/update"
+  get "sub_tasks/destroy"
   devise_for :users, controllers: {
     sessions: "users/sessions"
   }
