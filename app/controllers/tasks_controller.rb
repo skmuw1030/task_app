@@ -1,4 +1,5 @@
 class TasksController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_task, only: [ :show, :edit, :update, :destroy ]
 
   def index
@@ -83,6 +84,7 @@ class TasksController < ApplicationController
         :estimated_minutes,
         :has_missing_docs,
         :missing_doc_memo,
+        :missing_doc_requested_to,
         :comment
       )
     end

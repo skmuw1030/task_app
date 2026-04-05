@@ -3,6 +3,8 @@ class Task < ApplicationRecord
 
   belongs_to :assignee, class_name: "User", foreign_key: "assignee_id", optional: true
 
+  belongs_to :missing_doc_requested_user, class_name: "User", foreign_key: :missing_doc_requested_to, optional: true
+
   has_many :sub_tasks, dependent: :destroy
 
   STATUSES = [ "未着手", "進行中", "完了" ]

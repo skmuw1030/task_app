@@ -1,11 +1,119 @@
-<h2>タスク詳細</h2>
+<%
+  priority_config = case @task.priority
+                    when "高"
+                      { class: "bg-red-50 text-red-700 border-red-100", label: "高" }
+                    when "中"
+                      { class: "bg-yellow-50 text-yellow-700 border-yellow-100", label: "中" }
+                    else
+                      { class: "bg-green-50 text-green-700 border-green-100", label: "低" }
+                    end
+%>
 
-<%= @task.title %>
-<%= @task.status %>
-<%= @task.assignee&.name %>
-<%= @task.creator.name %>
-<%= @task.comment %>
+<div class="bg-[#FAFAF9] min-h-screen">
+  <div class="max-w-2xl mx-auto px-5 py-6">
 
+    <div class="flex items-center gap-2 text-xs text-gray-500 mb-4">
+      <%= link_to "ボード", root_path, class: "hover:underline" %>
+      <span>/</span>
+      <span class="text-sm font-medium text-gray-700"><%= @task.title %></span>
+    </div>
 
-<%= link_to "編集", edit_task_path(@task) %> |
-<%= link_to "戻る", root_path %>
+    <div class="bg-white border border-gray-200 shadow-sm rounded-xl">
+
+      <div class="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
+        <h1 class="text-lg font-semibold text-gray-900"><%= @task.title %></h1>
+
+        <div class="flex gap-2">
+          <%= link_to "編集", edit_task_path(@task),
+              class: "px-3 py-1.5 text-xs text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50" %>
+
+          <%= button_to "削除", task_path(@task),
+              method: :delete,
+              data: { turbo_confirm: "本当に削除しますか？" },
+              class: "px-3 py-1.5 text-xs text-red-500 border border-red-100 rounded-lg hover:bg-red-50" %>
+        </div>
+      </div>
+
+      <div class="px-5 py-4 space-y-4">
+
+        <div class="grid grid-cols-2 gap-4 text-sm">
+
+          <div>
+            <p class="text-xs text-gray-400 mb-1">担当者</p>
+            <p class="text-gray-800"><%= @task.assignee&.name || "未設定" %></p>
+          </div>
+
+          <div>
+            <p class="text-xs text-gray-400 mb-1">依頼者</p>
+            <p class="text-gray-800"><%= @task.creator.name %></p>
+          </div>
+
+          <div>
+            <p class="text-xs text-gray-400 mb-1">期限日</p>
+            <p><%= @task.due_date&.strftime("%Y/%m/%d") || "—" %></p>
+          </div>
+
+          <div>
+            <p class="text-xs text-gray-400 mb-1">依頼日</p>
+            <p><%= @task.assigned_date&.strftime("%Y/%m/%d") || "—" %></p>
+          </div>
+
+          <div>
+            <p class="text-xs text-gray-400 mb-1">着手日</p>
+            <p><%= @task.started_at&.strftime("%Y/%m/%d") || "未着手" %></p>
+          </div>
+
+          <div>
+            <p class="text-xs text-gray-400 mb-1">完了日</p>
+            <p><%= @task.completed_at&.strftime("%Y/%m/%d") || "—" %></p>
+          </div>
+
+          <div>
+            <p class="text-xs text-gray-400 mb-1">目安時間</p>
+            <p><%= @task.estimated_minutes ? "#{@task.estimated_minutes}分" : "—" %></p>
+          </div>
+
+          <div>
+            <p class="text-xs text-gray-400 mb-1">優先度</p>
+            <p class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border transition-colors <%= priority_config[:class] %>">
+              <%= priority_config[:label] %>
+            </p>
+          </div>
+
+        </div>
+
+        <div>
+          <p class="text-xs text-gray-400 mb-1">ステータス</p>
+          <p class="text-sm font-medium text-gray-800"><%= @task.status %></p>
+        </div>
+
+        <% if @task.has_missing_docs? %>
+          <div class="bg-red-50 border border-red-100 rounded-xl p-4">
+            <p class="text-sm font-medium text-red-800 mb-2">【不足書類の詳細】</p>
+            <p class="text-sm text-red-700"><%= @task.missing_doc_memo %></p>
+            <div class="grid grid-cols-2 mt-2 gap-4 text-sm text-red-700 ">
+              <div class="flex">
+                <p class="text-red-500 mr-1 mb-1">依頼先：</p>
+                <p><%= @task.missing_doc_requested_user&.name || "未設定" %></p>
+              </div>
+              <div class="flex">
+                <p class="text-red-500 mr-1 mb-1">依頼日：</p>
+                <p><%= @task.missing_doc_requested_date&.strftime("%Y/%m/%d") %></p>
+              </div>
+            </div>
+
+          </div>
+        <% end %>
+
+        <% if @task.comment.present? %>
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-400 mb-2">備考欄</p>
+            <p class="text-sm text-gray-700"><%= @task.comment %></p>
+          </div>
+        <% end %>
+
+      </div>
+    </div>
+
+  </div>
+</div>

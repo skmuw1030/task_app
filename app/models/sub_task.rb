@@ -11,6 +11,7 @@ class SubTask < ApplicationRecord
   validates :estimated_minutes,
             numericality: { only_integer: true, greater_than_or_equal_to: 0 },
             allow_nil: true
+  validates :note, length: { maximum: 500 }
 
   before_save :record_completed_at
 

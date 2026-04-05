@@ -6,7 +6,7 @@
 
 <%= form_with model: @task do |f| %>
 
-  <div>
+  <div class="mb-4">
     <%= f.label :title, "タスク名" %>
     <%= f.text_field :title, readonly: !is_creator %>
     <% if @task.errors[:title].any? %>
@@ -76,8 +76,9 @@
     </div>
 
     <div>
-      <%= f.label :assignee_id, "不足書類の担当者" %>
-        <%= f.collection_select :assignee_id,User.all, :id, :name,
+      <%= f.label :missing_doc_requested_to, "不足書類の担当者" %>
+        <%= f.collection_select :missing_doc_requested_to,
+            User.order(:name), :id, :name,
            { include_blank: "担当者を選択（依頼する場合）" }, readonly: !(is_creator || is_assignee) %>
         <% if @task.errors[:missing_doc_requested_to].any? %>
         <%= @task.errors.full_messages_for(:missing_doc_requested_to).first %>
