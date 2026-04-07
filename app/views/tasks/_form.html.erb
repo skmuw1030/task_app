@@ -4,97 +4,129 @@
   is_assignee = @task.assignee_id == current_user.id
 %>
 
-<%= form_with model: @task do |f| %>
+<%= form_with model: task do |f| %>
 
   <div class="mb-4">
-    <%= f.label :title, "タスク名" %>
-    <%= f.text_field :title, readonly: !is_creator %>
-    <% if @task.errors[:title].any? %>
-      <%= @task.errors.full_messages_for(:title).first %>
+    <%= f.label :title, "タスク名", class: "block text-xs font-bold text-gray-500 mb-1" %>
+    <%= f.text_field :title, readonly: !is_creator,
+        placeholder: "例：利用者Aさんのカルテチェック",
+        class: "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400 transition-colors" %>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 mb-4">
+    <div>
+      <%= f.label :assignee_id, "担当者", class: "block text-xs font-bold text-gray-500 mb-1" %>
+      <% if is_creator %>
+        <%= f.collection_select :assignee_id, User.order(:name), :id, :name,
+            { include_blank: "担当者を選択" }, 
+            { class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-500 focus:text-gray-800 focus:outline-none focus:border-teal-400" } %>
+      <% else %>
+        <div class="w-full border border-gray-100 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-500 cursor-not-allowed">
+          <%= @task.assignee&.name || "未設定" %>
+        </div>
+        <%= f.hidden_field :assignee_id %>
+      <% end %>
+    </div>
+
+    <div>
+      <%= f.label :due_date, "期限日", class: "block text-xs font-bold text-gray-500 mb-1" %>
+      <% if is_creator %>
+        <%= f.date_field :due_date, 
+            class: "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-500 focus:text-gray-800 focus:outline-none focus:border-teal-400" %>
+      <% else %>
+        <div class="w-full border border-gray-100 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-500 cursor-not-allowed" >
+          <%= task.due_date&.strftime("%Y/%m/%d")|| "未設定" %>
+        </div>
+        <%= f.hidden_field :due_date %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 mb-4">
+    <div>
+      <%= f.label :priority, "優先度", class: "block text-xs font-bold text-gray-500 mb-1" %>
+      <% if is_creator %>
+        <%= f.select :priority, Task::PRIORITIES, {},
+            class: "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
+      <% else %>
+        <div class="w-full border border-gray-100 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-500 cursor-not-allowed">
+          <%= @task.priority %>
+        </div>
+        <%= f.hidden_field :priority %>
+      <% end %>
+      <% if @task.errors[:priority].any? %>
+        <%= @task.errors.full_messages_for(:priority).first %>
+      <% end %>
+    </div>
+
+    <div>
+      <%= f.label :estimated_minutes, "目安時間 (分)", class: "block text-xs font-bold text-gray-500 mb-1" %>
+      <%= f.number_field :estimated_minutes, min: 0, step: 5, readonly: !(is_creator || is_assignee),
+          placeholder: "例：15（5分単位)",
+          class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
+      <% if @task.errors[:estimated_minutes].any? %>
+        <%= @task.errors.full_messages_for(:estimated_minutes).first %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :status, "ステータス", class: "block text-xs font-bold text-gray-500 mb-1" %>
+    <% if is_creator || is_assignee %>
+      <%= f.select :status, Task::STATUSES, {},
+          class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
+    <% else %>
+      <div class="w-full border border-gray-100 bg-gray-50 rounded-lg  px-3 py-2 text-sm text-gray-400 cursor-not-allowed">
+        <%= @task.status %>
+      </div>
+      <%= f.hidden_field :status %>
     <% end %>
-  </div>
-
-  <div>
-    <%= f.label :assignee_id, "担当者" %>
-    <%= f.collection_select :assignee_id, User.all, :id, :name,
-        {include_blank: "担当者を選択" }, { disabled: !is_creator }%>
-  </div>
-
-  <div>
-    <%= f.label :status, "ステータス" %>
-    <%= f.select :status, Task::STATUSES, {}, { disabled: !(is_creator || is_assignee) } %> 
     <% if @task.errors[:status].any? %>
       <%= @task.errors.full_messages_for(:status).first %>
     <% end %>
   </div>
 
-  <div>
-    <%= f.label :priority, "優先度" %>
-    <% if is_creator %>
-      <%= f.select :priority, Task::PRIORITIES %>
-    <% else %>
-      <%= f.text_field :priority, readonly: true %>
-    <% end %>
-    <% if @task.errors[:priority].any? %>
-      <%= @task.errors.full_messages_for(:priority).first %>
-    <% end %>
-  </div>
-
-  <div>
-    <%= f.label :estimated_minutes, "所要時間(分)" %>
-    <%= f.number_field :estimated_minutes, min: 0,  step:5, readonly: !(is_creator || is_assignee) %>
-    <% if @task.errors[:estimated_minutes].any? %>
-      <%= @task.errors.full_messages_for(:estimated_minutes).first %>
-    <% end %>
-  </div>
-
-  <div>
-    <%= f.label :due_date, "期限日" %>
-    <%= f.date_field :due_date, readonly: !is_creator %>
-  </div>
-
-  <div>
-    <%= f.label :assigned_date,"割当日" %>
-    <%= f.date_field :assigned_date, readonly: !is_creator %>
-  </div>
-
   <% unless is_new %>
-    <div>
-      <%= f.label :has_missing_docs, "不足書類" %>
-      <%= f.check_box :has_missing_docs, disabled: !(is_creator || is_assignee) %>
-      <% if @task.errors[:has_missing_docs].any? %>
-        <%= @task.errors.full_messages_for(:has_missing_docs).first %>
-      <% end %>
-    </div>
+    <div class="p-4 bg-red-50/50 rounded-xl border border-red-100 space-y-3">
+      <div class="flex items-center gap-2">
+        <%= f.check_box :has_missing_docs, disabled: !(is_creator || is_assignee), class: "rounded text-red-500 focus:ring-red-400" %>
+        <%= f.label :has_missing_docs, "不足書類あり", class: "text-xs font-bold text-red-700" %>
+      </div>
+      
+      <div>
+        <%= f.label :missing_doc_memo, "不足内容", class: "block text-[10px] font-bold text-red-400 mb-1 uppercase" %>
+        <%= f.text_area :missing_doc_memo, readonly: !(is_creator || is_assignee), rows: 2,
+            class: "w-full border border-red-100 rounded-lg  text-sm text-gray-800 focus:outline-none focus:border-red-300 resize-none" %>
+        <% if @task.errors[:missing_doc_memo].any? %>
+          <%= @task.errors.full_messages_for(:missing_doc_memo).first %>
+        <% end %>
+      </div>
 
-    <div>
-      <%= f.label :missing_doc_memo, "不足内容" %>
-      <%= f.text_area :missing_doc_memo, readonly: !(is_creator || is_assignee) %>
-      <% if @task.errors[:missing_doc_memo].any? %>
-        <%= @task.errors.full_messages_for(:missing_doc_memo).first %>
-      <% end %>
-    </div>
-
-    <div>
-      <%= f.label :missing_doc_requested_to, "不足書類の担当者" %>
-        <%= f.collection_select :missing_doc_requested_to,
-            User.order(:name), :id, :name,
-           { include_blank: "担当者を選択（依頼する場合）" }, readonly: !(is_creator || is_assignee) %>
-        <% if @task.errors[:missing_doc_requested_to].any? %>
-        <%= @task.errors.full_messages_for(:missing_doc_requested_to).first %>
-      <% end %>
+      <div>
+        <%= f.label :missing_doc_requested_to, "不足書類の担当者", class: "block text-[10px] font-bold text-red-400 mb-1 uppercase tracking-wider" %>
+        <% if is_creator || is_assignee %>
+          <%= f.collection_select :missing_doc_requested_to,
+              User.order(:name), :id, :name,
+              { include_blank: "担当者を選択（依頼する場合）" }, 
+              { class: "w-full border border-red-100 rounded-lg  text-sm text-gray-500 focus:text-gray-800 focus:outline-none focus:border-red-300" } %>
+        <% else %>
+          <div class="w-full border border-red-50 bg-white/50 rounded-lg px-3 py-2 text-sm text-gray-400 cursor-not-allowed">
+            <%= @task.missing_doc_requested_user&.name || "未設定" %>
+          </div>
+        <% end %>
+      </div>
     </div>
   <% end %>
 
-  <div>
-    <%= f.label :comment, "備考欄" %>
-    <%= f.text_area :comment, readonly: !(is_creator || is_assignee) %>
-    <% if @task.errors[:comment].any? %>
-      <%= @task.errors.full_messages_for(:comment).first %>
-    <% end %>
+  <div class="mb-4">
+    <%= f.label :comment, "備考欄", class: "block text-xs font-bold text-gray-500 mb-1" %>
+    <%= f.text_area :comment, readonly: !(is_creator || is_assignee), rows: 3,
+        class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400 resize-none" %>
   </div>
 
-  <div>
-    <%= f.submit @task.new_record? ? "タスクを登録" : "タスクを更新" %>
+  <div class="flex gap-3 pt-2">
+    <%= f.submit is_new ? "タスクを作成" : "更新する",
+        class: "flex-1 bg-teal-500 text-white py-3 rounded-xl text-sm font-bold hover:bg-teal-600 shadow-sm cursor-pointer transition-all" %>
+    <%= link_to "キャンセル", root_path, class: "flex-1 text-center border border-gray-200 text-gray-400 py-3 rounded-xl text-sm hover:bg-gray-50 transition-all" %>
   </div>
 <% end %>

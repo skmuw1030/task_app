@@ -1,5 +1,24 @@
-<h2>新規タスク作成</h2>
+<div class="bg-[#FAFAF9] min-h-screen">
+  <div class="mx-auto max-w-2xl px-5 py-3"  >
 
-<%= render "form", task: @task %>
+  <div class="flex items-center gap-2 text-xs text-gray-400 mb-4">
+      <%= link_to "ボード", root_path, class: "text-gray-500 hover:underline" %>
+      <span>/</span>
+      <span class="text-gray-700 font-medium">タスクを作成</span>
+    </div>
 
-<%= link_to "トップへ戻る", root_path %>
+    <div class="bg-white border border-gray-200 shadow-sm rounded-xl">
+      <div class="px-5 py-4 border-b border-gray-100">
+        <h1 class="text-center text-base font-medium text-gray-800">
+          タスクを作成
+        </h1>
+      </div>
+
+      <div class="px-5 py-5">
+        <%= render "form", task: @task %>
+      </div>
+    </div>
+
+  </div>
+</div>
+
