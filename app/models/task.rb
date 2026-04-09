@@ -16,6 +16,7 @@ class Task < ApplicationRecord
   validates :estimated_minutes,
             numericality: { only_integer: true, greater_than_or_equal_to: 0 },
             allow_nil: true
+  validate :estimated_minutes_step_five
   validates :missing_doc_memo, length: { maximum: 500 }, presence: true, if: :has_missing_docs?
   validates :missing_doc_requested_to, length: { maximum: 5 }, allow_blank: true
   validates :comment, length: { maximum: 500 }
@@ -28,5 +29,11 @@ class Task < ApplicationRecord
     self.status ||= "未着手"
     self.priority ||= "中"
     self.assigned_date ||= Date.today
+  end
+
+  def estimated_minutes_step_five
+    if estimated_minutes.present? && estimated_minutes % 5 != 0
+      errors.add(:estimated_minutes, "は５分単位で入力してください")
+    end
   end
 end

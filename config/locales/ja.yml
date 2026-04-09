@@ -5,7 +5,7 @@ ja:
         title: "タスク名"
         status: "ステータス"
         priority: "優先度"
-        estimated_minutes: "所要時間"
+        estimated_minutes: "目安時間"
         due_date: "期限日"
         assigned_date: "割当日"
         has_missing_docs: "不足書類"
