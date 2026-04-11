@@ -9,6 +9,8 @@ class Task < ApplicationRecord
 
   STATUSES = [ "未着手", "進行中", "完了" ]
   PRIORITIES = [ "高", "中", "低" ]
+  SUKIMA_TIMES = [ 5, 10, 15, 30, 60 ].freeze
+  URGENT_DAYS = 3
 
   validates :title, presence: true, length: { maximum: 50 }
   validates :status, presence: true, inclusion: { in: STATUSES }
@@ -22,6 +24,49 @@ class Task < ApplicationRecord
   validates :comment, length: { maximum: 500 }
 
   after_initialize :set_default_values, if: :new_record?
+
+
+  def due_status
+    return :none unless due_date
+    return :done if status == "完了"
+
+    case
+    when due_date < Date.today
+      :overdue
+    when due_date <= Date.today + URGENT_DAYS.days
+      :urgent
+    else
+      :normal
+    end
+  end
+
+  def overdue?
+    due_status == :overdue
+  end
+
+  def urgent?
+    due_status == :urgent
+  end
+
+  def days_left
+    return nil unless due_date
+    (due_date - Date.today).to_i
+  end
+
+  def completable?
+    sub_tasks.all? do |st|
+      st.status == "完了"
+    end
+  end
+
+  def fit_in_time?(minutes)
+    return false if minutes.nil?
+    return false if estimated_minutes.nil?
+
+    estimated_minutes <= minutes.to_i
+  end
+
+
 
   private
 

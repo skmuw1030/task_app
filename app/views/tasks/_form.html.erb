@@ -1,7 +1,7 @@
 <% 
-  is_new = @task.new_record?
-  is_creator = is_new || (@task.user_id == current_user.id)
-  is_assignee = @task.assignee_id == current_user.id
+  is_new = task.new_record?
+  is_creator = is_new || (task.user_id == current_user.id)
+  is_assignee = task.assignee_id == current_user.id
 %>
 
 <%= form_with model: task, html: { novalidate: true } do |f| %>
@@ -24,7 +24,7 @@
                 { class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-500 focus:text-gray-800 focus:outline-none focus:border-teal-400" } %>
           <% else %>
             <div class="w-full border border-gray-100 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-500 cursor-not-allowed">
-              <%= @task.assignee&.name || "未設定" %>
+              <%= task.assignee&.name || "未設定" %>
             </div>
             <%= f.hidden_field :assignee_id %>
           <% end %>
@@ -53,13 +53,13 @@
                 class: "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
           <% else %>
             <div class="w-full border border-gray-100 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-500 cursor-not-allowed">
-              <%= @task.priority %>
+              <%= task.priority %>
             </div>
             <%= f.hidden_field :priority %>
           <% end %>
-          <% if @task.errors[:priority].any? %>
+          <% if task.errors[:priority].any? %>
             <p class="text-xs text-red-600">
-              <%= @task.errors.full_messages_for(:priority).first %>
+              <%= task.errors.full_messages_for(:priority).first %>
             </p>
           <% end %>
         </div>
@@ -69,9 +69,9 @@
           <%= f.number_field :estimated_minutes, min: 0, step: 5, readonly: !(is_creator || is_assignee),
               placeholder: "例：15（5分単位)",
               class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
-          <% if @task.errors[:estimated_minutes].any? %>
+          <% if task.errors[:estimated_minutes].any? %>
             <p class="text-xs text-red-600">
-              <%= @task.errors.full_messages_for(:estimated_minutes).first %>
+              <%= task.errors.full_messages_for(:estimated_minutes).first %>
             </p>
           <% end %>
         </div>
@@ -84,13 +84,13 @@
               class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
         <% else %>
           <div class="w-full border border-gray-100 bg-gray-50 rounded-lg  px-3 py-2 text-sm text-gray-400 cursor-not-allowed">
-            <%= @task.status %>
+            <%= task.status %>
           </div>
           <%= f.hidden_field :status %>
         <% end %>
-        <% if @task.errors[:status].any? %>
+        <% if task.errors[:status].any? %>
           <p class="text-xs text-red-600">
-            <%= @task.errors.full_messages_for(:status).first %>
+            <%= task.errors.full_messages_for(:status).first %>
           </p>
         <% end %>
       </div>
@@ -108,15 +108,15 @@
             <%= f.label :missing_doc_memo, "不足内容", class: "block text-[10px] font-bold text-red-400 mb-1 uppercase" %>
             <%= f.text_area :missing_doc_memo, readonly: !(is_creator || is_assignee), rows: 2,
                 class: "w-full border border-red-100 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-red-300 resize-none" %>
-            <% if @task.errors[:missing_doc_memo].any? %>
+            <% if task.errors[:missing_doc_memo].any? %>
               <p class="text-xs text-red-600">
-                <%= @task.errors.full_messages_for(:missing_doc_memo).first %>
+                <%= task.errors.full_messages_for(:missing_doc_memo).first %>
               </p>
             <% end %>
           </div>
 
           <div>
-            <%= f.label :missing_doc_requested_to, "不足書類の担当者", class: "block text-[10px] font-bold text-red-400 mb-1 uppercase tracking-wider" %>
+            <%= f.label :missing_doc_requested_to, "不足書類の担当者", class: "block text-[10px] font-bold text-red-400 mb-1" %>
             <% if is_creator || is_assignee %>
               <%= f.collection_select :missing_doc_requested_to,
                   User.order(:name), :id, :name,
@@ -124,23 +124,27 @@
                   { class: "w-full border border-red-100 rounded-lg px-3 py-2 text-sm text-gray-500 focus:text-gray-800 focus:outline-none focus:border-red-300" } %>
             <% else %>
               <div class="w-full border border-red-50 bg-white/50 rounded-lg px-3 py-2 text-sm text-gray-400">
-                <%= @task.missing_doc_requested_user&.name || "未設定" %>
+                <%= task.missing_doc_requested_user&.name || "未設定" %>
               </div>
             <% end %>
           </div>
+
+          <div>
+            <%= f.label :missing_doc_requested_date, "依頼日",class: "block text-[10px] font-bold text-red-400 mb-1" %>
+            <%= f.date_field :missing_doc_requested_date, class:"w-full border border-red-100 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-red-300" %>
+          </div>
         </div>
       <% end %>
-
-      <div>
-        <%= f.label :comment, "備考欄", class: "block text-xs font-bold text-gray-500 mb-1" %>
-        <%= f.text_area :comment, readonly: !(is_creator || is_assignee), rows: 3,
-            class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
-      </div>
     </div>
   </div>
-  
 
-  <div class="flex gap-3 pt-2">
+  <div class="mb-8 mt-6 w-full">
+    <%= f.label :comment, "備考欄", class: "block text-xs font-bold text-gray-500 mb-1" %>
+    <%= f.text_area :comment, readonly: !(is_creator || is_assignee), rows: 3,
+        class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
+  </div>
+  
+  <div class="flex gap-3 pt-4 pb-3">
     <%= f.submit is_new ? "タスクを作成" : "更新する",
         class: "flex-1 bg-teal-500 text-white py-3 rounded-xl text-sm font-bold hover:bg-teal-600 shadow-sm cursor-pointer transition-all" %>
     <%= link_to "キャンセル", root_path, class: "flex-1 text-center border border-gray-200 text-gray-400 py-3 rounded-xl text-sm hover:bg-gray-50 transition-all" %>
