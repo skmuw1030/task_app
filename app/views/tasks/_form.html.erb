@@ -2,10 +2,13 @@
   is_new = task.new_record?
   is_creator = is_new || (task.user_id == current_user.id)
   is_assignee = task.assignee_id == current_user.id
+
+  grid_layout = is_new ?  "max-w-2xl mx-auto grid-cols-1" : "lg:grid-cols-2"
+  button_width = is_new ? "max-w-2xl mx-auto" : "w-full"
 %>
 
 <%= form_with model: task, html: { novalidate: true } do |f| %>
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+  <div class="grid grid-cols-1 <%= grid_layout %> gap-6 w-full">
 
     <div class="space-y-4 w-full">
       <div>
@@ -94,6 +97,11 @@
           </p>
         <% end %>
       </div>
+      <div class="mb-8 mt-6 w-full">
+    <%= f.label :comment, "備考欄", class: "block text-xs font-bold text-gray-500 mb-1" %>
+    <%= f.text_area :comment, readonly: !(is_creator || is_assignee), rows: 3,
+        class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
+  </div>
     </div>
 
     <div class="space-y-4 w-full">
@@ -137,14 +145,8 @@
       <% end %>
     </div>
   </div>
-
-  <div class="mb-8 mt-6 w-full">
-    <%= f.label :comment, "備考欄", class: "block text-xs font-bold text-gray-500 mb-1" %>
-    <%= f.text_area :comment, readonly: !(is_creator || is_assignee), rows: 3,
-        class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
-  </div>
   
-  <div class="flex gap-3 pt-4 pb-3">
+  <div class="flex gap-3 pt-4 pb-3 <%= button_width %>">
     <%= f.submit is_new ? "タスクを作成" : "更新する",
         class: "flex-1 bg-teal-500 text-white py-3 rounded-xl text-sm font-bold hover:bg-teal-600 shadow-sm cursor-pointer transition-all" %>
     <%= link_to "キャンセル", root_path, class: "flex-1 text-center border border-gray-200 text-gray-400 py-3 rounded-xl text-sm hover:bg-gray-50 transition-all" %>
