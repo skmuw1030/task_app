@@ -1,6 +1,61 @@
-<h2><%= current_user.name %>さんが作成したタスク</h2>
-<% @tasks.each do |task| %>
-  <%= link_to task.title, task_path(task) %>
-<% end %>
+<div class="bg-[#FAFAF9] p-6 min-h-screen">
+
+<div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold text-slate-700"><%= current_user.name %>さんが作成したタスク</h2>
+      <%= link_to new_task_path,
+        class: "bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-600" do %>
+        <i class="fa-solid fa-plus mr-1"></i>タスク作成
+      <% end %>
+  </div>
+
+  <div class="bg-white border border-gray-200 rounded-xl shadow-lg ">
+   <table>
+     <thead>
+      <tr>
+        <th>タスク名</th>
+        <th>担当者</th>
+        <th>ステータス</th>
+        <th>優先度</th>
+        <th>期限日</th>
+        <th>子タスク</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @tasks.any? %>
+        <% @tasks.each do |task| %>
+      <tr>
+        <td>
+          <%= link_to task.title, task_path(task), class:"block text-sm font-medium text-gray-800 hover:text-teal-600 hover:underline" %>
+          <p class="text-xs text-gray-500 mt-0.5">依頼日<%= task.assigned_date&.strftime("%Y/%m/%d") %></p>
+        </td> 
+        <td>
+         <%= task.assignee&.name || "未設定" %>
+        </td>
+        <td>
+          <%= task.status %>
+        </td>
+        <td>
+          <%= task.priority %>
+        </td>
+        <td>
+          <%= task.due_date&.strftime("%Y/%m/%d") %>
+        </td>
+        <td>
+          <% if task.sub_tasks.any? %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    <% end %>
+    </tbody>
+  </table>
+  </div>
+  </div>
+
+
+
+
+
+
 
 <%= link_to "カンバン（トップ）に戻る", root_path %>

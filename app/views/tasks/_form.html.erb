@@ -97,11 +97,12 @@
           </p>
         <% end %>
       </div>
+
       <div class="mb-8 mt-6 w-full">
-    <%= f.label :comment, "備考欄", class: "block text-xs font-bold text-gray-500 mb-1" %>
-    <%= f.text_area :comment, readonly: !(is_creator || is_assignee), rows: 3,
-        class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
-  </div>
+        <%= f.label :comment, "備考欄", class: "block text-xs font-bold text-gray-500 mb-1" %>
+        <%= f.text_area :comment, readonly: !(is_creator || is_assignee), rows: 3,
+            class: "w-full border border-gray-200 rounded-lg  px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
+      </div>
     </div>
 
     <div class="space-y-4 w-full">
