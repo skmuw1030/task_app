@@ -3,21 +3,25 @@
 
 <h2 class="text-center mb-10 font-bold text-lg text-slate-800">ログイン</h2>
 
-<% if alert %>
-    <p class="auth-alert"><%= alert %></p>
-  <% end %>
+<% if flash[:alert] %>
+  <div class="w-[85%] mx-auto mb-6 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm flex items-center">
+  <%= flash[:alert] %>
+  </div>
+<% end %>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="block mb-6 w-full">
+  <div class="mb-6 w-full">
     <%= f.label :email, class: "block w-[85%] mx-auto mb-2 font-semibold text-left text-slate-600 text-sm" %>
     <%= f.email_field :email, autofocus: true, autocomplete: "email", 
         class: "block w-[85%] mx-auto p-3 rounded-lg text-base border border-slate-200 outline-none focus:border-green-600 focus:shadow-md" %>
+    
   </div>
 
-  <div class="block mb-6 w-full">
+  <div class="mb-6 w-full">
     <%= f.label :password, class: "block w-[85%] mx-auto mb-2 font-semibold text-left text-slate-600 text-sm" %>
     <%= f.password_field :password, autocomplete: "current-password", 
         class: "block w-[85%] mx-auto p-3 rounded-lg text-base border border-slate-200 outline-none focus:border-green-600 focus:shadow-md" %>
+   
 
     <div class="w-[85%] mt-1 mx-auto text-right">
       <%= link_to "パスワードをお忘れの方", new_password_path(resource_name), class: "text-sm text-gray-600 hover:underline hover:text-teal-500" %>
