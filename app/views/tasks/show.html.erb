@@ -87,7 +87,9 @@
           <p class="text-sm font-medium text-gray-800"><%= @task.status %></p>
         </div>
 
-        <% if @task.has_missing_docs? %>
+        <% if false %>
+        <div class="field">
+          <% if @task.has_missing_docs? %>
           <div class="bg-red-50 border border-red-100 rounded-xl p-4">
             <p class="text-sm font-medium text-red-800 mb-2">【不足書類の詳細】</p>
             <p class="text-sm text-red-700"><%= @task.missing_doc_memo %></p>
@@ -100,9 +102,16 @@
                 <p class="text-red-500 mr-1 mb-1">依頼日：</p>
                 <p><%= @task.missing_doc_requested_date&.strftime("%Y/%m/%d") %></p>
               </div>
+              <%= link_to new_task_sub_task_path(@task), 
+                  data: { turbo_frame: "modal" }, 
+                  class: "bg-rose-400 text-white px-2 py-1 rounded-lg font-bold shadow-sm hover:bg-rose-500" do %>
+                  <i class="fa-solid fa-plus-circle mr-1"></i>ここから依頼タスクを作成
+              <% end %>
             </div>
 
           </div>
+          <% end %>
+        </div>
         <% end %>
 
         <% if @task.comment.present? %>
@@ -114,6 +123,80 @@
 
       </div>
     </div>
+  
 
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm mt-2 mb-4">
+
+      <div class="px-5 py-4 flex justify-between items-center">
+        <h3 class="text-sm font-medium text-gray-700">依頼タスク</h3>
+        <%= link_to new_task_sub_task_path(@task), 
+            data: { turbo_frame: "modal" }, 
+            class: "bg-rose-400 text-white text-sm px-2 py-1 rounded-lg shadow-sm hover:bg-rose-500" do %>
+            <i class="fa-solid fa-plus-circle mr-1"></i>依頼タスクを作成
+        <% end %>
+      </div>
+
+      <% if @task.sub_tasks.any? %>
+
+        <div class="px-5 py-4">
+          <div class="flex justify-between text-xs text-gray-400 mb-1">
+            <span>進捗</span>
+            <span><%= @task.sub_tasks_progress_view %></span>
+          </div>
+          <div class="w-full bg-gray-100 rounded-full h-2">
+            <div class="h-2 rounded-full transition-all bg-blue-400"
+              style="width:<%= @task.sub_tasks_progress %>%">
+            </div>
+          </div>
+        </div>
+
+        <% @task.sub_tasks.each do |sub| %>
+          <%
+              sub_priority_config = case sub.priority
+                                    when "高"
+                                       { class: "bg-red-50 text-red-700 border-red-100", label: "高" }
+                                    when "中"
+                                       { class: "bg-yellow-50 text-yellow-700 border-yellow-100", label: "中" }
+                                    else
+                                       { class: "bg-green-50 text-green-700 border-green-100", label: "低" }
+                                    end
+          %>
+
+
+          <div class="px-5 py-3 flex items-center gap-3">
+            <% if sub.status == "完了" %>
+              <i class="fa-solid fa-circle-check text-teal-300 text-lg"></i>
+            <% else %>
+              <i class="fa-regular fa-circle text-gray-300 text-lg"></i>
+            <% end %>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <p class="text-sm text-gray-800"><%= sub.title %></p>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs <%= sub_priority_config[:class] %>">
+                  <%= sub_priority_config[:label] %>
+                </span>
+              </div>
+        
+              <div class="text-xs text-gray-400 mt-0.5 flex items-center gap-3 flex-wrap">
+                <% if sub.assignee %>
+                  <span><i class="fa-solid fa-user mr-1"></i><%= sub.assignee.name %></span>
+                <% end %>
+                <% if sub.due_date %>
+                  <span><i class="fa-regular fa-calendar mr-1"></i><%= sub.due_date.strftime("%m/%d") %></span>
+                <% end %>
+                <% if sub.completed_at %>
+                  <%= sub.completed_at.strftime("%m/%d") %>完了
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>  
+      <% else %>
+        <div class="px-5 py-8 text-center border-t border-gray-50">
+          <p class="text-sm text-gray-400">依頼タスクはありません</p>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
+

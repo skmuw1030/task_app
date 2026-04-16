@@ -4,7 +4,7 @@
   is_assignee = sub_task.assignee == current_user
 %>
 
-<%= form_with model: [task, sub_task] do |f| %>
+<%= form_with model: [task, sub_task], data: { turbo_frame: "_top" } do |f| %>
 
   <div class="mb-4">
     <%= f.label :title, "タスク名", class: "block text-xs font-medium text-gray-700 mb-1" %>
@@ -98,7 +98,7 @@
     <%= f.text_area :note,
         rows: 3,
         placeholder: "補足情報など",
-        class: "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400 resize-none" %>
+        class: "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400" %>
     <% if sub_task.errors[:note].any? %>
       <p class="text-xs text-red-600">
         <%= sub_task.errors.full_messages_for(:note).first %>
@@ -108,9 +108,8 @@
 
   <div class="flex gap-3 pt-1">
     <%= f.submit sub_task.persisted? ? "更新する" : "追加する",
-        class: "flex-1 bg-teal-500 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-teal-600 cursor-pointer" %>
-    <%= link_to "キャンセル",
-        sub_task.persisted? ? task_path(sub_task.task) : task_path(task),
+        class: "flex-1 bg-rose-400 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-rose-500 " %>
+    <%= link_to "キャンセル", root_path,
         class: "flex-1 text-center border border-gray-200 text-gray-500 py-2.5 rounded-xl text-sm hover:bg-gray-50" %>
   </div>
 

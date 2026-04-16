@@ -3,7 +3,7 @@ class Task < ApplicationRecord
 
   belongs_to :assignee, class_name: "User", foreign_key: "assignee_id", optional: true
 
-  belongs_to :missing_doc_requested_user, class_name: "User", foreign_key: :missing_doc_requested_to, optional: true
+  # belongs_to :missing_doc_requested_user, class_name: "User", foreign_key: :missing_doc_requested_to, optional: true
 
   has_many :sub_tasks, dependent: :destroy
 
@@ -19,8 +19,8 @@ class Task < ApplicationRecord
             numericality: { only_integer: true, greater_than_or_equal_to: 0 },
             allow_nil: true
   validate :estimated_minutes_step_five
-  validates :missing_doc_memo, length: { maximum: 500 }, presence: true, if: :has_missing_docs?
-  validates :missing_doc_requested_to, length: { maximum: 5 }, allow_blank: true
+  # validates :missing_doc_memo, length: { maximum: 500 }, presence: true, if: :has_missing_docs?
+  # validates :missing_doc_requested_to, length: { maximum: 5 }, allow_blank: true
   validates :comment, length: { maximum: 500 }
 
   after_initialize :set_default_values, if: :new_record?
@@ -58,6 +58,26 @@ class Task < ApplicationRecord
       st.status == "完了"
     end
   end
+
+  def done_sub_tasks_count
+    sub_tasks.where(status: "完了").count
+  end
+
+  def total_sub_tasks_count
+    sub_tasks.count
+  end
+
+  def sub_tasks_progress
+    return 0 if sub_tasks.empty?
+
+    ((done_sub_tasks_count.to_f / total_sub_tasks_count) * 100).round
+  end
+
+  def sub_tasks_progress_view
+    "#{done_sub_tasks_count} / #{total_sub_tasks_count} 完了"
+  end
+
+
 
   def fit_in_time?(minutes)
     return false if minutes.nil?

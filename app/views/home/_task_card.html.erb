@@ -58,10 +58,47 @@ p-3 mb-3">
       <p class="flex items-center"><i class="fa-regular fa-clock mr-1"></i><%= task.estimated_minutes %>分</p>
     <% end %>
   </div>
+
+  <% if task.sub_tasks.any? %>
+    <% done  = task.sub_tasks.count { |st| st.status == "完了" } %>
+    <% total = task.sub_tasks.count %>
+    <div class="mb-2">
+      <div class="flex justify-between text-xs text-gray-300 mb-1">
+        <span>子タスク</span><span><%= done %>/<%= total %></span>
+      </div>
+      <div class="w-full bg-gray-100 rounded-full h-1">
+        <div class="<%= done == total ? 'bg-teal-400' : 'bg-blue-300' %> h-1 rounded-full"
+             style="width:<%= total > 0 ? (done.to_f / total * 100).round : 0 %>%"></div>
+      </div>
+    </div>
+    <% task.sub_tasks.first(3).each do |sub| %>
+      <div class="flex items-center gap-1.5 py-0.5">
+        <span class="w-1.5 h-1.5 rounded-full flex-shrink-0
+          <%= sub.status == '完了' ? 'bg-teal-400' : sub.status == '進行中' ? 'bg-yellow-400' : 'bg-gray-300' %>">
+        </span>
+        <span class="text-xs truncate flex-1
+          <%= sub.status == '完了' ? 'line-through text-gray-300' : 'text-gray-500' %>">
+          <%= sub.title %>
+        </span>
+        <% if sub.assignee %>
+          <span class="text-xs text-gray-300 flex-shrink-0"><%= sub.assignee.name.slice(0, 1) %></span>
+        <% end %>
+      </div>
+    <% end %>
+    <% if task.sub_tasks.count > 3 %>
+      <p class="text-xs text-gray-300 mt-0.5">他 <%= task.sub_tasks.count - 3 %> 件...</p>
+    <% end %>
+  <% end %>
+
+
   
   <div class="flex items-center gap-2 mt-2 flex-wrap">
     <%= link_to "詳細", task_path(task), class: "text-xs text-blue-400 hover:underline" %>
     <%= link_to "編集", edit_task_path(task), class: "text-xs text-gray-400 hover:underline" %>
+    <%= link_to new_task_sub_task_path(task), data: { turbo_frame: "modal" }, 
+        class: "text-rose-400 hover:text-rose-600 text-xs" do %>
+      <i class="fa-solid fa-plus-circle"></i> 不足書類を追加
+    <% end %>
     <% if task.status != "完了" %>
       <% if task.completable? %>
         <%= button_to task_path(task, task: { status: "完了" }),
@@ -70,7 +107,7 @@ p-3 mb-3">
               <i class="fa-solid fa-circle-check mr-1"></i>完了
         <% end %>
       <% else %>
-        <span class="text-xs text-gray-300">
+        <span class="text-xs text-gray-500">
           <i class="fa-solid fa-spinner mr-1"></i>子タスク待ち
         </span>
       <% end %>

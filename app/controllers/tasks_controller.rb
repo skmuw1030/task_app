@@ -64,10 +64,6 @@ class TasksController < ApplicationController
       :assigned_date,
       :started_at,
       :completed_at,
-      :has_missing_docs,
-      :missing_doc_memo,
-      :missing_doc_requested_to,
-      :missing_doc_requested_date,
       :comment
 
     )
@@ -82,9 +78,6 @@ class TasksController < ApplicationController
       params.require(:task).permit(
         :status,
         :estimated_minutes,
-        :has_missing_docs,
-        :missing_doc_memo,
-        :missing_doc_requested_to,
         :comment
       )
     end

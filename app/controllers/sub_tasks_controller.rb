@@ -11,7 +11,7 @@ class SubTasksController < ApplicationController
     @sub_task.creator = current_user
 
     if @sub_task.save
-      redirect_to task_path(@task), notice: "依頼タスクを追加しました"
+      redirect_to root_path, notice: "依頼タスクを追加しました", status: :see_other
     else
       flash.now[:alert]="依頼タスク登録に失敗しました"
       render :new, status: :unprocessable_entity
