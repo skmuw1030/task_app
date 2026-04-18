@@ -1,4 +1,5 @@
 <%
+  is_sub = task.is_a?(SubTask)
   priority_config = case task.priority
                     when "高"
                       { class: "bg-red-50 text-red-700 border-red-100", label: "高" }
@@ -12,13 +13,19 @@
                     when :urgent then "text-yellow-500"
                     else ""
                     end
+  card_bg_color = is_sub ? "bg-orange-50" : "bg-white"
+  
 %>
 
-<div class="bg-white rounded-2xl shadow-sm 
+<div class="<%= card_bg_color %> rounded-2xl shadow-sm 
   <%= task.fit_in_time?(params[:sukima])? "ring-2 ring-teal-300" : "" %> 
 p-3 mb-3">
 
   <div class="flex flex-wrap gap-1 mb-2">
+    <% if is_sub %>
+      <span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">依頼タスク</span>
+    <% end %>
+
     <% if task.overdue? %>
       <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
         <i class="fa-solid fa-circle-xmark mr-1"></i>期限切れ
@@ -28,13 +35,21 @@ p-3 mb-3">
         <i class="fa-solid fa-triangle-exclamation mr-1"></i> 残り<%= task.days_left %>日
       </span>
     <% end %>
-    <% if task.has_missing_docs? %>
-      <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-        <i class="fa-regular fa-note-sticky mr-1"></i>不足書類</span>
+
+    <% if false %>
+      <div class="field">
+        <% if task.has_missing_docs? %>
+          <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+            <i class="fa-regular fa-note-sticky mr-1"></i>不足書類
+          </span>
+        <% end %>
+      </div>
     <% end %>
+
     <span class="text-xs <%= priority_config[:class] %> px-2 py-0.5 rounded-full" >
       <%= priority_config[:label] %>
     </span>
+
     <% if task.fit_in_time?(params[:sukima]) %>
       <span class="text-xs bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full">
         <i class="fa-solid fa-mug-hot mr-1"></i>スキマでできる
@@ -45,9 +60,17 @@ p-3 mb-3">
   <p class="text-sm font-medium text-gray-800 mb-1"><%= task.title %></p>
 
   <div class="text-xs text-gray-500 space-y-0.5 mb-2">
-    <p class="flex items-center">
-      <i class="fa-solid fa-user mr-1"></i><%= task.creator.name %> より依頼
-    </p>
+    <% if is_sub %>
+      <p class="flex items-center text-xs text-gray-400">
+        <i class="fa-solid fa-user mr-1"></i><%= task.creator.name %> より
+      </p>
+      <p class="text-xs text-gray-400 truncate">親タスク：<%= task.task.title %></p>
+    <% else %>
+      <p class="flex items-center">
+        <i class="fa-solid fa-user mr-1"></i><%= task.creator.name %> より
+      </p>
+    <% end %>
+
     <% if task.due_date %>
       <p class="text-xs <%= color_code_due %>">
         <i class="fa-regular fa-calendar mr-1"></i>
@@ -59,50 +82,44 @@ p-3 mb-3">
     <% end %>
   </div>
 
-  <% if task.sub_tasks.any? %>
-    <% done  = task.sub_tasks.count { |st| st.status == "完了" } %>
-    <% total = task.sub_tasks.count %>
+  <% if !is_sub && task.sub_tasks.any? %>
     <div class="mb-2">
-      <div class="flex justify-between text-xs text-gray-300 mb-1">
-        <span>子タスク</span><span><%= done %>/<%= total %></span>
-      </div>
+      <div class="flex justify-between text-xs text-gray-400 mb-1">
+            <span>進捗</span>
+            <span><%= task.sub_tasks_progress_view %></span>
+          </div>
       <div class="w-full bg-gray-100 rounded-full h-1">
-        <div class="<%= done == total ? 'bg-teal-400' : 'bg-blue-300' %> h-1 rounded-full"
-             style="width:<%= total > 0 ? (done.to_f / total * 100).round : 0 %>%"></div>
+        <div class="h-1 rounded-full transition-all bg-blue-400"
+            style="width:<%= task.sub_tasks_progress %>%">
+        </div>
       </div>
     </div>
-    <% task.sub_tasks.first(3).each do |sub| %>
-      <div class="flex items-center gap-1.5 py-0.5">
-        <span class="w-1.5 h-1.5 rounded-full flex-shrink-0
-          <%= sub.status == '完了' ? 'bg-teal-400' : sub.status == '進行中' ? 'bg-yellow-400' : 'bg-gray-300' %>">
-        </span>
-        <span class="text-xs truncate flex-1
-          <%= sub.status == '完了' ? 'line-through text-gray-300' : 'text-gray-500' %>">
-          <%= sub.title %>
-        </span>
-        <% if sub.assignee %>
-          <span class="text-xs text-gray-300 flex-shrink-0"><%= sub.assignee.name.slice(0, 1) %></span>
-        <% end %>
-      </div>
-    <% end %>
-    <% if task.sub_tasks.count > 3 %>
-      <p class="text-xs text-gray-300 mt-0.5">他 <%= task.sub_tasks.count - 3 %> 件...</p>
-    <% end %>
   <% end %>
 
 
   
   <div class="flex items-center gap-2 mt-2 flex-wrap">
+  <% if is_sub %>
+    <%= link_to "編集", edit_task_sub_task_path(task.task, task), class: "text-xs text-gray-400 hover:underline" %>
+  <% else %>
     <%= link_to "詳細", task_path(task), class: "text-xs text-blue-400 hover:underline" %>
     <%= link_to "編集", edit_task_path(task), class: "text-xs text-gray-400 hover:underline" %>
     <%= link_to new_task_sub_task_path(task), data: { turbo_frame: "modal" }, 
         class: "text-rose-400 hover:text-rose-600 text-xs" do %>
       <i class="fa-solid fa-plus-circle"></i> 不足書類を追加
     <% end %>
+  <% end %>
+
     <% if task.status != "完了" %>
       <% if task.completable? %>
-        <%= button_to task_path(task, task: { status: "完了" }),
-            method: :patch,
+        <% 
+          target_path = is_sub ? task_sub_task_path(task.task, task) : task_path(task)
+          params_key = is_sub ? :sub_task : :task
+        %>
+           
+        <%= button_to target_path,
+            method: :patch, 
+            params: { params_key => {status: "完了"} },
             class: "text-xs bg-teal-400 text-white px-2 py-0.5 rounded-lg hover:bg-teal-500" do %>
               <i class="fa-solid fa-circle-check mr-1"></i>完了
         <% end %>

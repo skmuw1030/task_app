@@ -1,4 +1,11 @@
-<div>
-  <h1 class="font-bold text-4xl">SubTasks#edit</h1>
-  <p>Find me in app/views/sub_tasks/edit.html.erb</p>
-</div>
+<%= turbo_frame_tag "modal" do %>
+  <%= render "shared/modal", title: "依頼タスクを編集" do %>
+    
+    <p class="text-right text-xs text-gray-400 mb-4">
+      親タスク：<%= @task.title %>
+    </p>
+
+    <%= render "form", sub_task: @sub_task, task: @task %>
+
+  <% end %>
+<% end %>

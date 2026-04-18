@@ -1,6 +1,7 @@
 class SubTasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task, only: [ :new, :create ]
+  before_action :set_sub_task, only: [ :edit, :update, :destroy ]
 
   def new
     @sub_task = @task.sub_tasks.build
@@ -19,9 +20,17 @@ class SubTasksController < ApplicationController
   end
 
   def edit
+    @task = Task.find(params[:task_id])
+    @sub_task = @task.sub_tasks.find(params[:id])
   end
 
   def update
+    if @sub_task.update(sub_task_params)
+      redirect_to root_path, notice: "依頼タスクを更新しました", status: :see_other
+    else
+      flash.now[:alert]="依頼タスクの更新に失敗しました"
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -33,6 +42,10 @@ class SubTasksController < ApplicationController
     @task = Task.where(user_id: current_user.id)
                 .or(Task.where(assignee_id: current_user.id))
                 .find(params[:task_id])
+  end
+
+  def set_sub_task
+    @sub_task = SubTask.find(params[:id])
   end
 
 

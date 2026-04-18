@@ -2,9 +2,9 @@ class HomeController < ApplicationController
   def index
     if user_signed_in?
       @parent_tasks = current_user.assigned_tasks.includes(sub_tasks: :assignee)
-      @my_sub_tasks = SubTask.where(assignee_id: current_user.id)
-                             .includes(:task)
-                             .where.not(task: { assignee_id: current_user.id })
+
+      @my_sub_tasks = SubTask.where(assignee_id: current_user.id).includes(:task)
+
 
       @all_tasks =(@parent_tasks + @my_sub_tasks).uniq
 

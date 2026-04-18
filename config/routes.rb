@@ -23,6 +23,6 @@ Rails.application.routes.draw do
       get :created
     end
 
-    resources :sub_tasks, shallow: true, only: [ :new, :create, :edit, :update, :destroy ]
+    resources :sub_tasks, only: [ :new, :create, :edit, :update, :destroy ]
   end
 end

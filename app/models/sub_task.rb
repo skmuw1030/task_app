@@ -5,15 +5,59 @@ class SubTask < ApplicationRecord
 
   belongs_to :assignee, class_name: "User", foreign_key: "assignee_id", optional: true
 
-  validates :title, presence: true, length: { maximum: 50 }
+  validates :title, presence: true, length: { maximum: 30 }
   validates :status, presence: true, inclusion: { in: Task::STATUSES }
   validates :priority, presence: true, inclusion: { in: Task::PRIORITIES }
   validates :estimated_minutes,
             numericality: { only_integer: true, greater_than_or_equal_to: 0 },
             allow_nil: true
-  validates :note, length: { maximum: 500 }
+  validate :estimated_minutes_step_five
+  validates :note, length: { maximum: 300 }
 
   before_save :record_completed_at
+
+  def due_status
+    return :none unless due_date
+    return :done if status == "完了"
+
+    case
+    when due_date < Date.today
+      :overdue
+    when due_date <= Date.today + Task::URGENT_DAYS.days
+      :urgent
+    else
+      :normal
+    end
+  end
+
+  def overdue?
+    due_status == :overdue
+  end
+
+  def urgent?
+    due_status == :urgent
+  end
+
+  def days_left
+    return nil unless due_date
+    (due_date - Date.today).to_i
+  end
+
+  def fit_in_time?(minutes)
+    return false if minutes.nil?
+    return false if estimated_minutes.nil?
+
+    estimated_minutes <= minutes.to_i
+  end
+
+  def sub_tasks
+    SubTask.none
+  end
+
+  def completable?
+    true
+  end
+
 
   private
 
@@ -24,6 +68,17 @@ class SubTask < ApplicationRecord
       self.completed_at = Date.today
     else
       self.completed_at = nil
+    end
+  end
+
+  def set_default_values
+    self.status ||= "未着手"
+    self.priority ||= "中"
+  end
+
+  def estimated_minutes_step_five
+    if estimated_minutes.present? && estimated_minutes % 5 != 0
+      errors.add(:estimated_minutes, "は5分単位で入力してください")
     end
   end
 end
