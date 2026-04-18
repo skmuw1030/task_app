@@ -8,6 +8,8 @@ class SubTask < ApplicationRecord
   validates :title, presence: true, length: { maximum: 30 }
   validates :status, presence: true, inclusion: { in: Task::STATUSES }
   validates :priority, presence: true, inclusion: { in: Task::PRIORITIES }
+  validate :due_date_today_or_future
+  validate :due_date_task_after_sub_task
   validates :estimated_minutes,
             numericality: { only_integer: true, greater_than_or_equal_to: 0 },
             allow_nil: true
@@ -60,6 +62,22 @@ class SubTask < ApplicationRecord
 
 
   private
+
+  def due_date_today_or_future
+    return if due_date.blank?
+
+    if due_date < Date.today
+      errors.add(:due_date, "は本日以降の日付にしてください")
+    end
+  end
+
+  def due_date_task_after_sub_task
+    return if due_date.blank? || task.due_date.blank?
+
+    if due_date > task.due_date
+      errors.add(:due_date, "は親タスクの期限(#{task.due_date.strftime("%m/%d")})以前に設定してください")
+    end
+  end
 
   def record_completed_at
     return unless status_changed?

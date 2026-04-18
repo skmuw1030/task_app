@@ -15,6 +15,7 @@ class Task < ApplicationRecord
   validates :title, presence: true, length: { maximum: 50 }
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :priority, presence: true, inclusion: { in: PRIORITIES }
+  validate :due_date_today_or_future
   validates :estimated_minutes,
             numericality: { only_integer: true, greater_than_or_equal_to: 0 },
             allow_nil: true
@@ -24,6 +25,8 @@ class Task < ApplicationRecord
   validates :comment, length: { maximum: 500 }
 
   after_initialize :set_default_values, if: :new_record?
+
+  before_save :record_completed_at
 
 
   def due_status
@@ -89,6 +92,24 @@ class Task < ApplicationRecord
 
 
   private
+
+  def due_date_today_or_future
+    return if due_date.blank?
+
+    if due_date < Date.today
+      errors.add(:due_date, "は本日以降の日付にしてください")
+    end
+  end
+
+  def record_completed_at
+    return unless status_changed?
+
+    if status == "完了"
+      self.completed_at = Date.today
+    else
+      self.completed_at = nil
+    end
+  end
 
   def set_default_values
     self.status ||= "未着手"

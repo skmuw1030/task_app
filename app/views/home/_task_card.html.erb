@@ -23,7 +23,7 @@ p-3 mb-3">
 
   <div class="flex flex-wrap gap-1 mb-2">
     <% if is_sub %>
-      <span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">依頼タスク</span>
+      <span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">子タスク</span>
     <% end %>
 
     <% if task.overdue? %>
@@ -85,7 +85,7 @@ p-3 mb-3">
   <% if !is_sub && task.sub_tasks.any? %>
     <div class="mb-2">
       <div class="flex justify-between text-xs text-gray-400 mb-1">
-            <span>進捗</span>
+            <span>子タスク進捗</span>
             <span><%= task.sub_tasks_progress_view %></span>
           </div>
       <div class="w-full bg-gray-100 rounded-full h-1">
@@ -102,7 +102,7 @@ p-3 mb-3">
   <% if is_sub %>
     <%= link_to "編集", edit_task_sub_task_path(task.task, task), class: "text-xs text-gray-400 hover:underline" %>
   <% else %>
-    <%= link_to "詳細", task_path(task), class: "text-xs text-blue-400 hover:underline" %>
+    <%= link_to "詳細", task_path(task), data: { turbo: false }, class: "text-xs text-blue-400 hover:underline" %>
     <%= link_to "編集", edit_task_path(task), class: "text-xs text-gray-400 hover:underline" %>
     <%= link_to new_task_sub_task_path(task), data: { turbo_frame: "modal" }, 
         class: "text-rose-400 hover:text-rose-600 text-xs" do %>

@@ -44,6 +44,11 @@
             </div>
             <%= f.hidden_field :due_date %>
           <% end %>
+          <% if task.errors[:due_date].any? %>
+            <p class="text-xs text-red-600">
+              <%= task.errors.full_messages_for(:due_date).first %>
+            </p>
+          <% end %>
         </div>
       </div>
   

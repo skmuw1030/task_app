@@ -8,7 +8,17 @@ ja:
         estimated_minutes: "目安時間"
         due_date: "期限日"
         assigned_date: "割当日"
+        completed_at: "完了日"
         has_missing_docs: "不足書類"
         missing_doc_memo: "不足内容"
         missing_doc_requested_to: "担当者"
         comment: "備考欄"
+        
+      sub_task:
+        title: "タスク名"
+        status: "ステータス"
+        priority: "優先度"
+        estimated_minutes: "目安時間"
+        due_date: "期限日"
+        completed_at: "完了日"
+        note: "備考欄"
