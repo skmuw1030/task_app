@@ -17,4 +17,20 @@ class HomeController < ApplicationController
       @done_tasks =@all_tasks .select { |t| t.status == "完了" }
     end
   end
+
+  def update_status
+    task_id = params[:id].to_i
+    @card = Task.find_by(id: task_id) || SubTask.find_by(id: task_id) |
+
+    if @card.nil?
+      render json: { error: "タスクが見つかりません" }, status: :not_found
+      return
+    end
+
+    if @card.update_with_timestamps(params[:status])
+      render json: { message: "ステータス更新しました" }, status: :ok
+    else
+      render json: { error: "ステータス更新に失敗しました" }, status: :unprocessable_entity
+    end
+  end
 end

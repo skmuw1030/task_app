@@ -28,6 +28,19 @@ class Task < ApplicationRecord
 
   before_save :record_completed_at
 
+  def update_with_timestamps(new_status)
+    self.status = new_status
+
+    case new_status
+    when "進行中"
+      self.started_at ||= Date.today
+    when "完了"
+      self.completed_at ||= Date.today
+    end
+
+    save
+  end
+
 
   def due_status
     return :none unless due_date

@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   root "home#index"
 
   resources :tasks do
+    member do
+      patch :update_status, to: "home#update_status"
+    end
     collection do
       get :created
     end

@@ -30,53 +30,62 @@
   <div class="flex flex-row items-start gap-6 overflow-x-auto pb-4">
 
     <div class="flex-1 min-w-[300px] bg-[#F5F3FF] rounded-2xl shadow-sm p-4">
-    <div class="flex justify-between items-center mb-4">
-      <h3 class="text-purple-900">
-        未着手
-        <span class="bg-[#DDD6FE] text-xs px-2 py-1 rounded-full">
-          <%= @todo_tasks.count %>件
-        </span>
-      </h3>
-       <%= link_to new_task_path(status: "未着手"),
-          class: "block items-center text-xs py-2 px-3 bg-purple-200 text-purple-500 rounded-xl hover:bg-purple-300" do %>
-        <i class="fa-solid fa-plus mr-1"></i>タスクを追加
-        <% end %>
-    </div>
-      <% @todo_tasks.each do |task| %>
-        <%= render "task_card", task: task %>
-      <% end %>
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-purple-900">
+            未着手
+            <span class="bg-[#DDD6FE] text-xs px-2 py-1 rounded-full">
+              <%= @todo_tasks.count %>件
+            </span>
+          </h3>
+          <%= link_to new_task_path(status: "未着手"),
+              class: "block items-center text-xs py-2 px-3 bg-purple-200 text-purple-500 rounded-xl hover:bg-purple-300" do %>
+              <i class="fa-solid fa-plus mr-1"></i>タスクを追加
+          <% end %>
+        </div>
+        <div data-controller="kanban" data-kanban-status-value="未着手" class="min-h-[60vh]">
+          <% @todo_tasks.each do |task| %>
+            <%= render "task_card", task: task %>
+          <% end %>
+        </div>
+      
     </div>
 
     
     <div class="flex-1 min-w-[300px] bg-[#EFF6FF] rounded-2xl shadow-sm p-4">
-      <div class="flex justify-between items-center mb-4">
-      <h3 class="text-blue-900">
-        進行中
-        <span class="bg-[#BFDBFE] text-xs px-2 py-1 rounded-full">
-          <%= @doing_tasks.count %>件
-        </span>
-      </h3>
-      <%= link_to new_task_path(status: "進行中"),
-          class: "block items-center text-xs py-2 px-3 bg-blue-200 text-blue-500 rounded-xl hover:bg-blue-300" do %>
-        <i class="fa-solid fa-plus mr-1"></i>タスクを追加
-      <% end %>
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-blue-900">
+            進行中
+            <span class="bg-[#BFDBFE] text-xs px-2 py-1 rounded-full">
+              <%= @doing_tasks.count %>件
+            </span>
+          </h3>
+          <%= link_to new_task_path(status: "進行中"),
+              class: "block items-center text-xs py-2 px-3 bg-blue-200 text-blue-500 rounded-xl hover:bg-blue-300" do %>
+            <i class="fa-solid fa-plus mr-1"></i>タスクを追加
+          <% end %>
+        </div>
+        <div data-controller="kanban" data-kanban-status-value="進行中" class="min-h-[200px]">
+        <% @doing_tasks.each do |task| %>
+          <%= render "task_card", task: task %>
+        <% end %>
       </div>
-      <% @doing_tasks.each do |task| %>
-        <%= render "task_card", task: task %>
-      <% end %>
+      
     </div>
 
 
     <div class="flex-1 min-w-[300px] bg-[#E6FFFA] rounded-2xl shadow-sm p-4">
-      <h3 class="mb-4 text-teal-900 flex items-center gap-1">
-        完了
-        <span class="bg-[#99F6E4] text-xs px-2 py-1 rounded-full">
-          <%= @done_tasks.count %>件
-        </span>
-      </h3>
-      <% @done_tasks.each do |task| %>
-        <%= render "task_card", task: task %>
-      <% end %>
+        <h3 class="mb-4 text-teal-900 flex items-center gap-1">
+          完了
+          <span class="bg-[#99F6E4] text-xs px-2 py-1 rounded-full">
+            <%= @done_tasks.count %>件
+          </span>
+        </h3>
+        <div data-controller="kanban" data-kanban-status-value="完了" class="min-h-[]">
+          <% @done_tasks.each do |task| %>
+            <%= render "task_card", task: task %>
+          <% end %>
+        </div>
+    
     </div>
 
   </div>

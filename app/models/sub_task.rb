@@ -18,6 +18,13 @@ class SubTask < ApplicationRecord
 
   before_save :record_completed_at
 
+  def update_with_timestamps(new_status)
+    self.status = new_status
+    # completed_at だけ記録する（started_at はないので無視）
+    self.completed_at ||= Time.current if new_status == "完了"
+    save
+  end
+
   def due_status
     return :none unless due_date
     return :done if status == "完了"

@@ -19,7 +19,7 @@
 
 <div class="<%= card_bg_color %> rounded-2xl shadow-sm 
   <%= task.fit_in_time?(params[:sukima])? "ring-2 ring-teal-300" : "" %> 
-p-3 mb-3">
+p-3 mb-3" data-id="<%= task.id %>">
 
   <div class="flex flex-wrap gap-1 mb-2">
     <% if is_sub %>
