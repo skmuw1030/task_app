@@ -64,7 +64,7 @@
             <i class="fa-solid fa-plus mr-1"></i>タスクを追加
           <% end %>
         </div>
-        <div data-controller="kanban" data-kanban-status-value="進行中" class="min-h-[200px]">
+        <div data-controller="kanban" data-kanban-status-value="進行中" class="min-h-[60vh]">
         <% @doing_tasks.each do |task| %>
           <%= render "task_card", task: task %>
         <% end %>
@@ -80,7 +80,7 @@
             <%= @done_tasks.count %>件
           </span>
         </h3>
-        <div data-controller="kanban" data-kanban-status-value="完了" class="min-h-[]">
+        <div data-controller="kanban" data-kanban-status-value="完了" class="min-h-[60vh]">
           <% @done_tasks.each do |task| %>
             <%= render "task_card", task: task %>
           <% end %>

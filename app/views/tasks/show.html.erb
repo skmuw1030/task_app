@@ -184,6 +184,9 @@
                 <% if sub.due_date %>
                   <span><i class="fa-regular fa-calendar mr-1"></i><%= sub.due_date.strftime("%m/%d") %></span>
                 <% end %>
+                <% if sub.started_at %>
+                  <%= sub.started_at.strftime("%m/%d") %>着手
+                <% end %>
                 <% if sub.completed_at %>
                   <%= sub.completed_at.strftime("%m/%d") %>完了
                 <% end %>

@@ -20,9 +20,15 @@ class SubTask < ApplicationRecord
 
   def update_with_timestamps(new_status)
     self.status = new_status
-    # completed_at だけ記録する（started_at はないので無視）
-    self.completed_at ||= Time.current if new_status == "完了"
-    save
+
+    case new_status
+    when "進行中"
+      self.started_at ||= Date.today
+    when "完了"
+      self.completed_at ||= Date.today
+    end
+
+    save!
   end
 
   def due_status

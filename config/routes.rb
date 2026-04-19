@@ -28,4 +28,6 @@ Rails.application.routes.draw do
 
     resources :sub_tasks, only: [ :new, :create, :edit, :update, :destroy ]
   end
+
+  patch "sub_tasks/:id/update_status", to: "home#update_status"
 end

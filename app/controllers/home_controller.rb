@@ -20,7 +20,7 @@ class HomeController < ApplicationController
 
   def update_status
     task_id = params[:id].to_i
-    @card = Task.find_by(id: task_id) || SubTask.find_by(id: task_id) |
+    @card = Task.find_by(id: task_id) || SubTask.find_by(id: task_id)
 
     if @card.nil?
       render json: { error: "タスクが見つかりません" }, status: :not_found

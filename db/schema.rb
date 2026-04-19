@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_04_152655) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_19_132643) do
   create_table "sub_tasks", force: :cascade do |t|
     t.integer "task_id", null: false
     t.integer "user_id", null: false
@@ -24,6 +24,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_04_152655) do
     t.datetime "updated_at", null: false
     t.string "priority", default: "中", null: false
     t.integer "estimated_minutes"
+    t.date "started_at"
     t.index ["assignee_id"], name: "index_sub_tasks_on_assignee_id"
     t.index ["task_id"], name: "index_sub_tasks_on_task_id"
     t.index ["user_id"], name: "index_sub_tasks_on_user_id"

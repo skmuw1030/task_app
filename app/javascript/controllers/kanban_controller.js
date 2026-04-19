@@ -17,11 +17,12 @@ export default class extends Controller {
     const { item, to } = event
 
     const taskId = item.dataset.id
+    const modelName = item.dataset.model
     const newStatus = to.dataset.kanbanStatusValue
 
     console.log({ taskId, newStatus })
 
-    const url = `/tasks/${taskId}/update_status`
+    const url = `/${modelName}/${taskId}/update_status`
 
     const response = await patch(url, {
       body: { status: newStatus },
