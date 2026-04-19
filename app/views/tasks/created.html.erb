@@ -1,61 +1,189 @@
+
+
 <div class="bg-[#FAFAF9] p-6 min-h-screen">
 
-<div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-bold text-slate-700"><%= current_user.name %>さんが作成したタスク</h2>
-      <%= link_to new_task_path,
-        class: "bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-600" do %>
-        <i class="fa-solid fa-plus mr-1"></i>タスク作成
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-lg md:text-medium font-bold text-slate-700 truncate"><%= current_user.name %>さんが作成したタスク</h2>
+    <%= link_to new_task_path,
+        class: "bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-600 shrink-0" do %>
+      <i class="fa-solid fa-plus mr-1"></i>
+      <span class="hidden sm:inline">タスク作成</span>
+    <% end %>
+  </div>
+
+  <div class="flex flex-row items-start justify-start md:justify-center gap-4 overflow-x-auto mb-5 pb-2">
+    <div class="flex-none w-24 sm:w-40 bg-[#F5F3FF] rounded-2xl shadow-sm p-4">
+      <p class="text-xl font-bold text-gray-800">
+        <%= @created_todo_tasks.count %>
+      </p>
+      <p class="text-xs text-purple-900">未着手</p>
+    </div>
+    <div class="flex-none w-24 sm:w-40 bg-[#EFF6FF] rounded-2xl shadow-sm p-4">
+      <p class="text-xl font-bold text-gray-800">
+        <%= @created_doing_tasks.count %>
+      </p>
+      <p class="text-xs text-blue-900">進行中</p>
+    </div>
+    <div class="flex-none w-24 sm:w-40 bg-[#E6FFFA] rounded-2xl shadow-sm p-4">
+      <p class="text-xl font-bold text-gray-800">
+        <%= @created_done_tasks.count %>
+      </p>
+      <p class="text-xs text-teal-900">完了</p>
+    </div>
+  </div>
+
+  <div class="hidden md:block bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden overflow-x-auto">
+    <table class="w-full min-w-[600px]">
+      <thead>
+        <tr class="bg-gray-50/80 border-b border-gray-100">
+          <th class="px-4 py-2 text-sm font-medium text-gray-500">タスク名</th>
+          <th class="px-4 py-2 text-sm font-medium text-gray-500">担当者</th>
+          <th class="px-4 py-2 text-sm font-medium text-gray-500">ステータス</th>
+          <th class="px-4 py-2 text-sm font-medium text-gray-500">優先度</th>
+          <th class="px-4 py-2 text-sm font-medium text-gray-500">期限日</th>
+          <th class="px-4 py-2 text-sm font-medium text-gray-500">子タスク</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% if @all_created_tasks.any? %>
+        <% @all_created_tasks.each do |task| %>
+          <%
+              is_sub = task.is_a?(SubTask)
+              priority_config = case task.priority
+                                when "高"
+                                { class: "bg-red-50 text-red-700 border-red-100", label: "高" }
+                                when "中"
+                                { class: "bg-yellow-50 text-yellow-700 border-yellow-100", label: "中" }
+                                else
+                                { class: "bg-green-50 text-green-700 border-green-100", label: "低" }
+                                end
+              status_config = case task.status
+                                when "未着手"
+                                { class: "bg-[#DDD6FE] text-purple-900 border-purple-100", label:"未着手" }
+                                when "進行中"
+                                { class: "bg-[#BFDBFE] text-blue-900 border-blue-100", label:"進行中" }
+                                else 
+                                { class: "bg-[#99F6E4] text-teal-900 border-teal-100", label:"完了" }
+                                end
+              color_code_due = case task.due_status
+                                when :overdue then "text-red-500 font-medium"
+                                when :urgent then "text-yellow-500"
+                                else ""
+                                end
+          %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-2">
+              <% if is_sub %>
+                <%= link_to task.title, task_path(task.task), class:"block truncate text-sm font-semibold text-gray-800 hover:text-teal-600 hover:underline" %>
+                <p class="text-xs text-gray-500 mt-0.5">子タスク（親：<%= task.task.title %></p>
+              <% else %>
+                <%= link_to task.title, task_path(task), class:"block truncate text-sm font-semibold text-gray-800 hover:text-teal-600 hover:underline" %>
+                <p class="text-xs text-gray-500 mt-0.5">依頼日 <%= task.assigned_date&.strftime("%m/%d") %></p>
+              <% end %>
+            </td> 
+            <td class="px-4 py-2 text-sm text-gray-600 text-center">
+              <%= task.assignee&.name || "未設定" %>
+            </td>
+            <td class="px-4 py-2 text-center">
+              <p class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border <%= status_config[:class] %>">
+                <%= status_config[:label] %>
+              </p>
+            </td>
+            <td class="px-4 py-2 text-center">
+              <p class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border <%= priority_config[:class] %>">
+                <%= priority_config[:label] %>
+              </p>
+            </td>
+            <td class="px-4 py-2 text-center">
+              <div class="flex flex-col gap-1 items-center">
+                <span class="text-sm <%= task.due_date && task.due_date < Date.today ? "text-red-500" : "text-gray-600" %>">
+                  <%= task.due_date&.strftime("%m/%d") || "—" %>
+                </span>
+                <% if task.overdue? %>
+                  <span class="text-xs bg-red-100 text-red-700 px-1 py-0.5 rounded-full">
+                    <i class="fa-solid fa-circle-xmark mr-1"></i>期限切れ
+                  </span>
+                <% elsif task.urgent? %>
+                  <span class="text-xs bg-yellow-100 text-yellow-700 px-1 py-0.5 rounded-full">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> 残り<%= task.days_left %>日
+                  </span>
+                <% end %>
+              </div>
+            </td>
+            <td class="px-4 py-2 min-w-[120px]">
+              <% if task.sub_tasks.any? %>
+                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                  <span>進捗</span>
+                  <span><%= task.sub_tasks_progress_view %></span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-1">
+                  <div class="h-1 rounded-full transition-all bg-blue-400"
+                      style="width:<%= task.sub_tasks_progress %>%">
+                  </div>
+                </div>
+              <% else %>
+                <p class="text-center text-xs text-gray-400">なし</p>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
       <% end %>
+      </tbody>
+    </table>
   </div>
 
-  <div class="bg-white border border-gray-200 rounded-xl shadow-lg ">
-   <table>
-     <thead>
-      <tr>
-        <th>タスク名</th>
-        <th>担当者</th>
-        <th>ステータス</th>
-        <th>優先度</th>
-        <th>期限日</th>
-        <th>子タスク</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% if @tasks.any? %>
-        <% @tasks.each do |task| %>
-      <tr>
-        <td>
-          <%= link_to task.title, task_path(task), class:"block text-sm font-medium text-gray-800 hover:text-teal-600 hover:underline" %>
-          <p class="text-xs text-gray-500 mt-0.5">依頼日<%= task.assigned_date&.strftime("%Y/%m/%d") %></p>
-        </td> 
-        <td>
-         <%= task.assignee&.name || "未設定" %>
-        </td>
-        <td>
-          <%= task.status %>
-        </td>
-        <td>
-          <%= task.priority %>
-        </td>
-        <td>
-          <%= task.due_date&.strftime("%Y/%m/%d") %>
-        </td>
-        <td>
-          <% if task.sub_tasks.any? %>
-          <% end %>
-        </td>
-      </tr>
+  <div class="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+    <% if @all_created_tasks.any? %>
+      <% @all_created_tasks.each do |task| %>
+          <%
+             is_sub = task.is_a?(SubTask)
+             priority_config = case task.priority
+                              when "高"
+                              { class: "bg-red-50 text-red-700 border-red-100", label: "高" }
+                              when "中"
+                              { class: "bg-yellow-50 text-yellow-700 border-yellow-100", label: "中" }
+                              else
+                              { class: "bg-green-50 text-green-700 border-green-100", label: "低" }
+                              end
+             status_config = case task.status
+                              when "未着手"
+                             { class: "bg-[#DDD6FE] text-purple-900 border-purple-100", label:"未着手" }
+                             when "進行中"
+                             { class: "bg-[#BFDBFE] text-blue-900 border-blue-100", label:"進行中" }
+                             else 
+                             { class: "bg-[#99F6E4] text-teal-900 border-teal-100", label:"完了" }
+                             end
+            color_code_due = case task.due_status
+                             when :overdue then "text-red-500 font-medium"
+                             when :urgent then "text-yellow-500"
+                            else ""
+                            end
+           %>
+           <div class="bg-white rounded-xl shadow-sm p-4">
+              <div class="mb-2">
+                <% if is_sub %>
+                  <%= link_to task.title, task_path(task.task), class:"block truncate text-sm font-semibold text-gray-800 hover:text-teal-600 hover:underline" %>
+                  <p class="text-xs text-gray-500 mt-0.5">子タスク（親：<%= task.task.title %></p>
+                <% else %>
+                  <%= link_to task.title, task_path(task), class:"block truncate text-sm font-semibold text-gray-800 hover:text-teal-600 hover:underline" %>
+                  <p class="text-xs text-gray-500 mt-0.5">依頼日 <%= task.assigned_date&.strftime("%m/%d") %></p>
+                <% end %>
+              </div>
+              <div class="flex items-center  gap-2 text-xs">
+                <span class="<%= priority_config[:class] %> px-2 py-0.5 rounded-full text-xs font-bold border">
+                  <%= priority_config[:label] %>
+                </span>
+                <span class="<%= status_config[:class] %> px-2 py-0.5 rounded-full border">
+                  <%= status_config[:label] %>
+                </span>
+                <span class="text-gray-500">担当：<%= task.assignee&.name || "未設定" %></span>
+                  <p class="<%= task.overdue? ? "text-red-500 font-bold" : "text-gray-600" %>">
+                    期限：<%= task.due_date&.strftime("%m/%d") || "—" %>
+                  </p>
+              </div>
+           </div>
+      <% end %>
     <% end %>
-    <% end %>
-    </tbody>
-  </table>
-  </div>
-  </div>
+   </div>
 
-
-
-
-
-
-
-<%= link_to "カンバン（トップ）に戻る", root_path %>
+</div>

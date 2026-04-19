@@ -40,7 +40,21 @@ class TasksController < ApplicationController
   end
 
   def created
-    @tasks = current_user.created_tasks.includes(:assignee)
+    if user_signed_in?
+      @created_parent_tasks = current_user.created_tasks.includes(:assignee, sub_tasks: :assignee)
+
+      @created_sub_tasks = SubTask.where(user_id: current_user.id).includes(:task)
+
+      @all_created_tasks =(@created_parent_tasks + @created_sub_tasks).uniq
+
+      if params[:sukima].present?
+        @all_created_tasks =@all_created_tasks.select { |t| t.fit_in_time?(params[:sukima]) }
+      end
+
+      @created_todo_tasks =@all_created_tasks.select { |t| t.status == "未着手" }
+      @created_doing_tasks =@all_created_tasks .select { |t| t.status == "進行中" }
+      @created_done_tasks =@all_created_tasks .select { |t| t.status == "完了" }
+    end
   end
 
   private
