@@ -22,16 +22,8 @@
 
       <div class="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
         <h1 class="text-lg font-semibold text-gray-900"><%= @task.title %></h1>
-
-        <div class="flex gap-2">
-          <%= link_to "編集", edit_task_path(@task),
-              class: "px-3 py-1.5 text-xs text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50" %>
-
-          <%= button_to "削除", task_path(@task),
-              method: :delete,
-              data: { turbo_confirm: "本当に削除しますか？" },
-              class: "px-3 py-1.5 text-xs text-red-500 border border-red-100 rounded-lg hover:bg-red-50" %>
-        </div>
+        <%= link_to "編集", edit_task_path(@task),
+            class: "px-3 py-1.5 text-xs text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50" %>
       </div>
 
       <div class="px-5 py-4 space-y-4">
@@ -105,7 +97,7 @@
               <%= link_to new_task_sub_task_path(@task), 
                   data: { turbo_frame: "modal" }, 
                   class: "bg-rose-400 text-white px-2 py-1 rounded-lg font-bold shadow-sm hover:bg-rose-500" do %>
-                  <i class="fa-solid fa-plus-circle mr-1"></i>ここから依頼タスクを作成
+                  <i class="fa-solid fa-plus-circle mr-1"></i>依頼タスクを作成
               <% end %>
             </div>
 
@@ -126,16 +118,9 @@
   
 
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm mt-2 mb-4">
-
-      <div class="px-5 py-4 flex justify-between items-center">
-        <h3 class="text-sm font-medium text-gray-700">依頼タスク</h3>
-        <%= link_to new_task_sub_task_path(@task), 
-            data: { turbo_frame: "modal" }, 
-            class: "bg-rose-400 text-white text-sm px-2 py-1 rounded-lg shadow-sm hover:bg-rose-500" do %>
-            <i class="fa-solid fa-plus-circle mr-1"></i>依頼タスクを作成
-        <% end %>
-      </div>
-
+      
+      <h3 class="px-5 py-4 text-sm font-medium text-gray-700">依頼タスク</h3>
+        
       <% if @task.sub_tasks.any? %>
 
         <div class="px-5 py-4">

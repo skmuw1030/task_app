@@ -36,7 +36,7 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy
-    redirect_to root_path, notice: "タスクを削除しました", status: :see_other
+    redirect_to created_tasks_path, notice: "タスクを削除しました", status: :see_other
   end
 
   def created

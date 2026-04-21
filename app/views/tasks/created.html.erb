@@ -125,6 +125,29 @@
                 <p class="text-center text-xs text-gray-400">なし</p>
               <% end %>
             </td>
+            <td class="px-4 py-2 text-center">
+              <div class="flex justify-center gap-2">
+                <% if is_sub %>
+                  <%= link_to edit_task_sub_task_path(task.task, task),class: "text-gray-400 hover:text-teal-600" do %>
+                    <i class="fa-solid fa-pen-to-square"></i>編集
+                  <% end %>
+                  <%= link_to task_sub_task_path(task.task, task), 
+                      data: { turbo_method: :delete, turbo_confirm: "この子タスクを削除しますか？" }, 
+                      class: "text-red-400 hover:underline ml-2" do %>
+                    <i class="fa-solid fa-trash-can"></i> 削除
+                  <% end %>
+                <% else %>
+                  <%= link_to edit_task_path(task),class: "text-gray-400 hover:text-teal-600" do %>
+                    <i class="fa-solid fa-pen-to-square"></i>編集
+                  <% end %>
+                  <%= link_to task_path(task), 
+                      data: { turbo_method: :delete, turbo_confirm: "親タスクと付随する子タスクを全て削除しますか？" }, 
+                      class: "text-red-400 hover:underline ml-2" do %>
+                    <i class="fa-solid fa-trash-can"></i> 削除
+                  <% end %>
+                <% end %> 
+              </div>
+            </div>
           </tr>
         <% end %>
       <% end %>
@@ -160,14 +183,39 @@
                             end
            %>
            <div class="bg-white rounded-xl shadow-sm p-4">
-              <div class="mb-2">
+              <div class="mb-2 flex justify-between items-start">
+              <div class="min-w-0 flex-1">
                 <% if is_sub %>
                   <%= link_to task.title, task_path(task.task), class:"block truncate text-sm font-semibold text-gray-800 hover:text-teal-600 hover:underline" %>
-                  <p class="text-xs text-gray-500 mt-0.5">子タスク（親：<%= task.task.title %></p>
+                  <p class="text-xs text-gray-500 mt-0.5">子タスク（親：<%= task.task.title %>)</p>
                 <% else %>
                   <%= link_to task.title, task_path(task), class:"block truncate text-sm font-semibold text-gray-800 hover:text-teal-600 hover:underline" %>
                   <p class="text-xs text-gray-500 mt-0.5">依頼日 <%= task.assigned_date&.strftime("%m/%d") %></p>
                 <% end %>
+              </div>
+
+                
+                <div class="flex items-center gap-2 shrink-0">
+                <% if is_sub %>
+                  <%= link_to edit_task_sub_task_path(task.task, task),class: "text-gray-400 hover:text-teal-600" do %>
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  <% end %>
+                  <%= link_to task_sub_task_path(task.task, task), 
+                      data: { turbo_method: :delete, turbo_confirm: "この子タスクを削除しますか？" }, 
+                      class: "text-red-400 hover:text-red-500" do %>
+                    <i class="fa-solid fa-trash-can"></i> 
+                  <% end %>
+                <% else %>
+                  <%= link_to edit_task_path(task), class: "text-gray-400 hover:text-teal-600" do %>
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  <% end %>
+                  <%= link_to task_path(task), 
+                      data: { turbo_method: :delete, turbo_confirm: "親タスクと付随する子タスクを全て削除しますか？" }, 
+                      class: "text-red-400 hover:text-red-500" do %>
+                    <i class="fa-solid fa-trash-can"></i>
+                  <% end %>
+                <% end %>
+                </div> 
               </div>
               <div class="flex items-center  gap-2 text-xs">
                 <span class="<%= priority_config[:class] %> px-2 py-0.5 rounded-full text-xs font-bold border">

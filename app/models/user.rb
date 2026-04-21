@@ -7,6 +7,9 @@ class User < ApplicationRecord
   has_many :created_tasks, class_name: "Task", foreign_key: "user_id", dependent: :destroy
   has_many :assigned_tasks, class_name: "Task", foreign_key: "assignee_id", dependent: :nullify
   has_many :sub_tasks, through: :created_tasks
+  has_many :created_sub_tasks, class_name: "SubTask", foreign_key: "user_id", dependent: :destroy
+  has_many :assigned_sub_tasks, class_name: "SubTask", foreign_key: "assignee_id", dependent: :nullify
+
 
   validates :name, presence: true
   validates :password, format: {
