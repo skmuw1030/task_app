@@ -1,0 +1,109 @@
+<%
+  priority_config = case task.priority
+                    when "高"
+                      { class: "bg-red-50 text-red-700 border-red-100", label: "高" }
+                    when "中"
+                      { class: "bg-yellow-50 text-yellow-700 border-yellow-100", label: "中" }
+                    else
+                      { class: "bg-green-50 text-green-700 border-green-100", label: "低" }
+                    end
+  color_code_due = case task.due_status
+                    when :overdue then "text-red-500 font-medium"
+                    when :urgent then "text-yellow-500"
+                    else ""
+                    end
+  
+%>
+
+<div class="bg-white rounded-2xl shadow-sm p-3 mb-3">
+
+  <div class="flex flex-wrap gap-1 mb-2">
+    <% if task.overdue? %>
+      <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+        <i class="fa-solid fa-circle-xmark mr-1"></i>期限切れ
+      </span>
+    <% elsif task.urgent? %>
+      <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">
+        <i class="fa-solid fa-triangle-exclamation mr-1"></i> 残り<%= task.days_left %>日
+      </span>
+    <% end %>
+
+    <span class="text-xs <%= priority_config[:class] %> px-2 py-0.5 rounded-full" >
+      <%= priority_config[:label] %>
+    </span>
+  </div>
+
+  <%= link_to task.title, task_path(task), class:"block truncate mb-1 text-sm font-medium text-gray-800 hover:text-teal-600 hover:underline" %>
+
+  <div class="text-xs text-gray-500 space-y-0.5 mb-2">
+    <p class="flex items-center">
+      <i class="fa-solid fa-user mr-1"></i><%= task.creator.name %> より
+    </p>
+    
+    <% if task.due_date %>
+      <p class="text-xs <%= color_code_due %>">
+        <i class="fa-regular fa-calendar mr-1"></i>
+        <%= task.due_date.strftime("%m/%d") %>
+      </p>
+    <% end %>
+    <% if task.estimated_minutes %>
+      <p class="flex items-center"><i class="fa-regular fa-clock mr-1"></i><%= task.estimated_minutes %>分</p>
+    <% end %>
+  </div>
+
+  <% if task.sub_tasks.any? %>
+    <div class="mb-2">
+      <div class="flex justify-between text-xs text-gray-400 mb-1">
+        <span>子タスク進捗</span>
+        <span><%= task.sub_tasks_progress_view %></span>
+      </div>
+      <div class="w-full bg-gray-100 rounded-full h-1">
+        <div class="h-1 rounded-full transition-all bg-blue-400"
+            style="width:<%= task.sub_tasks_progress %>%">
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <% task.sub_tasks.each do |sub| %>
+     <%
+        sub_priority_config = case sub.priority
+                              when "高"
+                                { class: "bg-red-50 text-red-700 border-red-100", label: "高" }
+                              when "中"
+                                { class: "bg-yellow-50 text-yellow-700 border-yellow-100", label: "中" }
+                              else
+                                { class: "bg-green-50 text-green-700 border-green-100", label: "低" }
+                              end
+      %>
+
+    <div class="flex items-center gap-2">
+      <% if sub.status == "完了" %>
+        <i class="fa-solid fa-circle-check text-teal-300 text-xs"></i>
+      <% else %>
+        <i class="fa-regular fa-circle text-gray-300 text-xs"></i>
+      <% end %>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 flex-wrap">
+          <p class="text-xs text-gray-800 truncate <%= "line-through" if sub.status == "完了" %>"><%= sub.title %></p>
+          <span class="flex-shrink-0 px-2 py-0.5 rounded-full text-xs <%= sub_priority_config[:class] %>">
+            <%= sub_priority_config[:label] %>
+          </span>
+        </div>
+        
+        <div class="text-[10px] text-gray-400 mt-0.5 flex items-center gap-1 flex-wrap">
+          <span><i class="fa-solid fa-user mr-1"></i><%= sub.assignee&.name %></span>
+          <% if sub.due_date %>
+            <span><i class="fa-regular fa-calendar mr-1"></i><%= sub.due_date.strftime("%m/%d") %></span>
+          <% end %>
+          <% if sub.started_at %>
+            <%= sub.started_at.strftime("%m/%d") %>着手
+          <% end %>
+          <% if sub.completed_at %>
+            <%= sub.completed_at.strftime("%m/%d") %>完了
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>  
+
+</div>

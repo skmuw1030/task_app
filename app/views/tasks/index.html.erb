@@ -1,1 +1,58 @@
-<h2>管理者用 全スタッフタスク一覧</h2>
+<div class="bg-[#FAFAF9] p-6 min-h-screen">
+
+  <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-bold text-slate-700">All Task Board</h2>
+      <%= link_to new_task_path,
+        class: "bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-600" do %>
+        <i class="fa-solid fa-plus mr-1"></i>タスク作成
+      <% end %>
+  </div>
+
+  <div class="flex flex-row items-start gap-6 overflow-x-auto pb-4">
+
+    <div class="flex-1 min-w-[300px] bg-[#F5F3FF] rounded-2xl shadow-sm p-4">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-purple-900">
+            未着手
+          </h3>
+          <span class="bg-[#DDD6FE] text-xs px-2 py-1 rounded-full">
+              <%= @all_todo_tasks.count %>件 
+            </span>
+        </div>
+        <% @all_todo_tasks.each do |task| %>
+          <%= render "admin_card", task: task %>
+        <% end %>  
+    </div>
+
+    
+    <div class="flex-1 min-w-[300px] bg-[#EFF6FF] rounded-2xl shadow-sm p-4">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-blue-900">
+            進行中
+          </h3>
+          <span class="bg-[#BFDBFE] text-xs px-2 py-1 rounded-full">
+            <%= @all_doing_tasks.count %>件
+          </span>
+        </div>
+        <% @all_doing_tasks.each do |task| %>
+          <%= render "admin_card", task: task %>
+        <% end %>     
+    </div>
+
+
+    <div class="flex-1 min-w-[300px] bg-[#E6FFFA] rounded-2xl shadow-sm p-4">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-teal-900">
+          完了
+        </h3>
+        <span class="bg-[#99F6E4] text-xs px-2 py-1 rounded-full">
+            <%= @all_done_tasks.count %>件
+        </span>
+      </div>
+        <% @all_done_tasks.each do |task| %>
+          <%= render "admin_card", task: task %>
+        <% end %>
+    </div>
+
+  </div>
+</div>
