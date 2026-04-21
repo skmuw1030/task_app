@@ -16,6 +16,11 @@
         <%= f.text_field :title, readonly: !is_creator,
             placeholder: "例：利用者Aさんのカルテチェック",
             class: "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-teal-400 transition-colors" %>
+        <% if task.errors[:title].any? %>
+          <p class="text-xs text-red-600">
+            <%= task.errors.full_messages_for(:title).first %>
+          </p>
+        <% end %>
       </div>
 
       <div class="grid grid-cols-2 gap-4 mb-4">
@@ -30,6 +35,11 @@
               <%= task.assignee&.name || "未設定" %>
             </div>
             <%= f.hidden_field :assignee_id %>
+          <% end %>
+          <% if task.errors[:assignee_id].any? %>
+            <p class="text-xs text-red-600">
+              <%= task.errors.full_messages_for(:assignee_id).first %>
+            </p>
           <% end %>
         </div>
 

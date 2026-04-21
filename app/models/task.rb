@@ -1,7 +1,7 @@
 class Task < ApplicationRecord
   belongs_to :creator, class_name: "User", foreign_key: "user_id"
 
-  belongs_to :assignee, class_name: "User", foreign_key: "assignee_id", optional: true
+  belongs_to :assignee, class_name: "User", foreign_key: "assignee_id"
 
   # belongs_to :missing_doc_requested_user, class_name: "User", foreign_key: :missing_doc_requested_to, optional: true
 
@@ -13,6 +13,7 @@ class Task < ApplicationRecord
   URGENT_DAYS = 3
 
   validates :title, presence: true, length: { maximum: 50 }
+  validates :assignee_id, presence: true
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :priority, presence: true, inclusion: { in: PRIORITIES }
   validate :due_date_today_or_future

@@ -3,9 +3,10 @@ class SubTask < ApplicationRecord
 
   belongs_to :creator, class_name: "User", foreign_key: "user_id"
 
-  belongs_to :assignee, class_name: "User", foreign_key: "assignee_id", optional: true
+  belongs_to :assignee, class_name: "User", foreign_key: "assignee_id"
 
   validates :title, presence: true, length: { maximum: 30 }
+  validates :assignee_id, presence: true
   validates :status, presence: true, inclusion: { in: Task::STATUSES }
   validates :priority, presence: true, inclusion: { in: Task::PRIORITIES }
   validate :due_date_today_or_future

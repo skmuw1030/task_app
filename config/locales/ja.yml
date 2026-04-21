@@ -3,6 +3,7 @@ ja:
     attributes:
       task:
         title: "タスク名"
+        assignee_id: "担当者"
         status: "ステータス"
         priority: "優先度"
         estimated_minutes: "目安時間"
@@ -16,6 +17,7 @@ ja:
         
       sub_task:
         title: "タスク名"
+        assignee_id: "担当者"
         status: "ステータス"
         priority: "優先度"
         estimated_minutes: "目安時間"

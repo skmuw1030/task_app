@@ -25,6 +25,7 @@ class SubTasksController < ApplicationController
   end
 
   def update
+    @task = @sub_task.task
     if @sub_task.update(sub_task_params)
       redirect_to root_path, notice: "依頼タスクを更新しました", status: :see_other
     else
@@ -57,6 +58,7 @@ class SubTasksController < ApplicationController
 
   def set_sub_task
     @sub_task = SubTask.find(params[:id])
+    @task = @sub_task.task
   end
 
 

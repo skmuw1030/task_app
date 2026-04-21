@@ -30,6 +30,11 @@
       </div>
       <%= f.hidden_field :assignee_id %>
     <% end %>
+    <% if sub_task.errors[:assignee_id].any? %>
+      <p class="text-xs text-red-600">
+        <%= sub_task.errors.full_messages_for(:assignee_id).first %>
+      </p>
+    <% end %>
   </div>
 
   <div class="mb-4">
