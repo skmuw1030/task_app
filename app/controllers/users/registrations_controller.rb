@@ -24,6 +24,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
+  def destroy
+    if resource.destroy_with_password(params[:user][:current_password])
+      redirect_to root_path, notice: "アカウント削除しました", status: :see_other
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   # DELETE /resource
   # def destroy
   #   super
