@@ -3,11 +3,6 @@ class TasksController < ApplicationController
   before_action :set_task, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @tasks = Task.includes(sub_tasks: :assignee)
-
-    @all_todo_tasks =@tasks.select { |t| t.status == "未着手" }
-    @all_doing_tasks =@tasks.select { |t| t.status == "進行中" }
-    @all_done_tasks =@tasks.select { |t| t.status == "完了" }
   end
 
   def new
@@ -65,14 +60,9 @@ class TasksController < ApplicationController
   private
 
   def set_task
-    if current_user.admin?
-      @task = Task.find(params[:id])
-    else
       @task = Task.where(user_id: current_user.id)
                 .or(Task.where(assignee_id: current_user.id))
                 .find(params[:id])
-
-    end
   end
 
   def task_params

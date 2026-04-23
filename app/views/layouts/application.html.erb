@@ -41,6 +41,11 @@
               </button>
           
               <div class="hidden absolute  group-hover:block right-0 top-full bg-white shadow-lg rounded-lg border border-gray-300 overflow-hidden z-50">
+                <% if current_user.admin? || current_user.guest? %>
+                  <%= link_to admin_tasks_path, class: "block w-full py-3 px-4 text-sm text-left border-none bg-none text-gray-600 hover:bg-teal-50 hover:text-teal-500 whitespace-nowrap" do %>
+                    <i class="fa-solid fa-bars-progress mr-1"></i>タスク進捗
+                  <% end %>
+                <% end %>
                 <%= link_to "作成したタスク一覧", created_tasks_path, class: "block w-full py-3 px-4 text-sm text-left border-none bg-none text-gray-600 hover:bg-teal-50 hover:text-teal-500 whitespace-nowrap" %>
                 <%= link_to "アカウント設定", edit_user_registration_path, class: "block w-full py-3 px-4 text-sm text-left border-none bg-none text-gray-600 hover:bg-teal-50 hover:text-teal-500" %>
                 <hr class="border-0 m-0 border-t border-slate-100">

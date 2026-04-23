@@ -19,6 +19,10 @@ Rails.application.routes.draw do
 
   root "home#index"
 
+  namespace :admin do
+    resources :tasks, only: [ :index ]
+  end
+
   resources :tasks do
     member do
       patch :update_status, to: "home#update_status"

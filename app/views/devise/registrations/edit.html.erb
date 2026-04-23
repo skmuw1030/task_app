@@ -91,12 +91,11 @@
         <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-xl">&times;</button>
       </div>
 
-     <%= form_for(resource, as: resource_name, url: registration_path(resource_name), method: :delete) do |f| %>
-      <div class="px-7 py-5 text-center">
-        <p class="text-slate-700 font-medium">アカウントを本当に削除しますか？</p>
-        <p class="text-xs text-slate-400 mt-2">※削除するには現在のパスワード入力が必要です</p>
-      </div>
-
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), method: :delete) do |f| %>
+        <div class="px-7 py-5 text-center">
+          <p class="text-slate-700 font-medium">アカウントを本当に削除しますか？</p>
+          <p class="text-xs text-slate-400 mt-2">※削除するには現在のパスワード入力が必要です</p>
+        </div>
     
         <div class="px-7 py-5 mb-3 text-center">
           <%= f.password_field :current_password, placeholder: "現在のパスワード",
@@ -109,14 +108,12 @@
           <% end %>
         </div>
 
-      <div class="px-6 py-4 bg-slate-50 flex gap-3 justify-end">
-        <button type="button" onclick="closeModal()" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-800">
-          キャンセル
-        </button>
-      
-        <%= f.submit "削除する",
-            class: "px-4 py-2 bg-red-500 text-white text-sm font-bold rounded-lg hover:bg-red-600" %>
-      </div>
+        <div class="px-6 py-4 bg-slate-50 flex gap-3 justify-end">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-800">
+            キャンセル
+          </button>
+          <%= f.submit "削除する", class: "px-4 py-2 bg-red-500 text-white text-sm font-bold rounded-lg hover:bg-red-600" %>
+        </div>
       <% end %>
     
     </div>
