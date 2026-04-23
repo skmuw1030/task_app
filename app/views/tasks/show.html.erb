@@ -7,6 +7,11 @@
                     else
                       { class: "bg-green-50 text-green-700 border-green-100", label: "低" }
                     end
+  color_code_due = case @task.due_status
+                    when :overdue then "text-red-500 font-medium"
+                    when :urgent then "text-yellow-500"
+                    else ""
+                    end
 %>
 
 <div class="bg-[#FAFAF9] min-h-screen">
@@ -32,7 +37,7 @@
 
           <div>
             <p class="text-xs text-gray-400 mb-1">担当者</p>
-            <p class="text-gray-800"><%= @task.assignee&.name || "未設定" %></p>
+            <p class="text-gray-800"><%= @task.assignee&.name %></p>
           </div>
 
           <div>
@@ -41,23 +46,27 @@
           </div>
 
           <div>
-            <p class="text-xs text-gray-400 mb-1">期限日</p>
-            <p><%= @task.due_date&.strftime("%Y/%m/%d") || "—" %></p>
+            <% if @task.due_date %>
+              <p class="text-xs text-gray-400 mb-1">期限日</p>
+              <p class="text-sm font-bold <%= color_code_due %>">
+                <%= @task.due_date&.strftime("%m/%d") || "—" %>
+              </p>
+            <% end %>
           </div>
 
           <div>
             <p class="text-xs text-gray-400 mb-1">依頼日</p>
-            <p><%= @task.assigned_date&.strftime("%Y/%m/%d") || "—" %></p>
+            <p><%= @task.assigned_date&.strftime("%m/%d") || "—" %></p>
           </div>
 
           <div>
             <p class="text-xs text-gray-400 mb-1">着手日</p>
-            <p><%= @task.started_at&.strftime("%Y/%m/%d") || "未着手" %></p>
+            <p><%= @task.started_at&.strftime("%m/%d") || "未着手" %></p>
           </div>
 
           <div>
             <p class="text-xs text-gray-400 mb-1">完了日</p>
-            <p><%= @task.completed_at&.strftime("%Y/%m/%d") || "—" %></p>
+            <p><%= @task.completed_at&.strftime("%m/%d") || "—" %></p>
           </div>
 
           <div>
@@ -92,7 +101,7 @@
               </div>
               <div class="flex">
                 <p class="text-red-500 mr-1 mb-1">依頼日：</p>
-                <p><%= @task.missing_doc_requested_date&.strftime("%Y/%m/%d") %></p>
+                <p><%= @task.missing_doc_requested_date&.strftime("%m/%d") %></p>
               </div>
               <%= link_to new_task_sub_task_path(@task), 
                   data: { turbo_frame: "modal" }, 
