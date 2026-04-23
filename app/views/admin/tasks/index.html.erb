@@ -1,12 +1,87 @@
 <div class="bg-[#FAFAF9] p-6 min-h-screen">
 
-  <div class="flex justify-between items-center mb-4">
-      <h2 class="text-2xl font-bold text-slate-700">All Task Board</h2>
+  <div class="flex justify-between items-center mb-3">
+      <h2 class="text-2xl font-bold text-slate-700">All Tasks Board</h2>
       <%= link_to new_task_path,
         class: "bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-600" do %>
         <i class="fa-solid fa-plus mr-1"></i>タスク作成
       <% end %>
   </div>
+
+  <div class="flex flex-row items-start justify-start md:justify-center gap-4 overflow-x-auto mb-3 pb-2">
+    <div class="flex-none w-24 sm:w-40 bg-[#F5F3FF] rounded-2xl shadow-sm p-3">
+      <p class="text-xl font-bold text-gray-800">
+        <%= @all_todo_tasks.count %>
+      </p>
+      <p class="text-xs text-purple-900">未着手</p>
+    </div>
+    <div class="flex-none w-24 sm:w-40 bg-[#EFF6FF] rounded-2xl shadow-sm p-3">
+      <p class="text-xl font-bold text-gray-800">
+        <%= @all_doing_tasks.count %>
+      </p>
+      <p class="text-xs text-blue-900">進行中</p>
+    </div>
+    <div class="flex-none w-24 sm:w-40 bg-[#E6FFFA] rounded-2xl shadow-sm p-3">
+      <p class="text-xl font-bold text-gray-800">
+        <%= @all_done_tasks.count %>
+      </p>
+      <p class="text-xs text-teal-900">完了</p>
+    </div>
+    <div class="flex-none w-24 sm:w-40 bg-red-50 rounded-2xl shadow-sm p-3">
+      <p class="text-xl font-bold text-gray-800">
+        <%= @overdue_tasks.count %>
+      </p>
+      <p class="text-xs text-red-900">期限切れ</p>
+    </div>
+    <div class="flex-none w-24 sm:w-40 bg-amber-50 rounded-2xl shadow-sm p-4">
+      <p class="text-xl font-bold text-gray-800">
+        <%= @urgent_tasks.count %>
+      </p>
+      <p class="text-xs text-amber-900">期限3日以内</p>
+    </div>
+  </div>
+
+
+  <div class="bg-white border border-gray-200 rounded-xl px-4 py-3 mb-2 flex items-center gap-3 flex-wrap">
+    <p class="text-sm font-medium text-gray-600">
+      <i class="fa-solid fa-users mr-1"></i>担当者
+    </p>
+    <div class="flex gap-2 flex-wrap">
+      <% @staffs.each do |staff| %>
+        <%= link_to staff.name, admin_tasks_path(user_id: staff.id),
+            class: "text-xs px-3 py-1 rounded-full border
+              #{params[:user_id].to_i == staff.id ?
+                "bg-teal-500 text-white border-teal-500" : "bg-white text-gray-500 border-gray-200 hover:border-teal-300"}" %>
+      <% end %>
+      <% if params[:user_id].present? %>
+        <%= link_to "全員表示", admin_tasks_path,
+            class: "text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white border border-gray-200 rounded-xl px-4 py-3 mb-5 flex items-center gap-3 flex-wrap">
+    <p class="text-sm font-medium text-gray-600">
+      <i class="fa-solid fa-filter mr-1"></i>絞り込み
+    </p>
+    <div class="flex gap-2 flex-wrap">
+      <%= link_to "期限切れ", admin_tasks_path(filter: "overdue", user_id: params[:user_id]),
+            class: "text-xs px-3 py-1 rounded-full border
+              #{params[:filter] == "overdue" ?
+                "bg-red-500 text-white border-red-500" : "bg-white text-gray-500 border-gray-200 hover:border-red-300"}" %>
+      <%= link_to "3日以内", admin_tasks_path(filter: "urgent", user_id: params[:user_id]),
+            class: "text-xs px-3 py-1 rounded-full border
+              #{params[:filter] == "urgent" ?
+                "bg-amber-500 text-white border-amber-500" : "bg-white text-gray-500 border-gray-200 hover:border-amber-300"}" %>
+      <%= link_to "すべて表示", admin_tasks_path(user_id: params[:user_id]),
+          class: "text-xs px-3 py-1 rounded-full border 
+            #{params[:filter].blank? ? 
+              'bg-teal-500 text-white border-teal-500' : 'bg-white text-gray-500 border-gray-200 hover:border-teal-300'}" %>
+      
+    </div>
+  </div>
+
+
 
   <div class="flex flex-row items-start gap-6 overflow-x-auto pb-4">
 

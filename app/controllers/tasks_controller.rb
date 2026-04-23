@@ -60,9 +60,13 @@ class TasksController < ApplicationController
   private
 
   def set_task
+    if current_user.admin? || current_user.guest?
+      @task = Task.find(params[:id])
+    else
       @task = Task.where(user_id: current_user.id)
                 .or(Task.where(assignee_id: current_user.id))
                 .find(params[:id])
+    end
   end
 
   def task_params
