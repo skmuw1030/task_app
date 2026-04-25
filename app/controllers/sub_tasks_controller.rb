@@ -1,7 +1,7 @@
 class SubTasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task, only: [ :new, :create ]
-  before_action :set_sub_task, only: [ :edit, :update, :destroy ]
+  before_action :set_sub_task, only: [ :show, :edit, :update, :destroy ]
 
   def new
     @sub_task = @task.sub_tasks.build

@@ -31,7 +31,7 @@ Rails.application.routes.draw do
       get :created
     end
 
-    resources :sub_tasks, only: [ :new, :create, :edit, :update, :destroy ]
+    resources :sub_tasks, only: [ :show, :new, :create, :edit, :update, :destroy ]
   end
 
   patch "sub_tasks/:id/update_status", to: "home#update_status"

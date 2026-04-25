@@ -89,8 +89,10 @@ class SubTask < ApplicationRecord
   def due_date_task_after_sub_task
     return if due_date.blank? || task.due_date.blank?
 
-    if due_date > task.due_date
-      errors.add(:due_date, "は親タスクの期限(#{task.due_date.strftime("%m/%d")})以前に設定してください")
+    if task.due_date >= Date.today
+      if due_date > task.due_date
+        errors.add(:due_date, "は親タスクの期限(#{task.due_date.strftime("%m/%d")})以前に設定してください")
+      end
     end
   end
 

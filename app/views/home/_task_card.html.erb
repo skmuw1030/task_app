@@ -101,6 +101,7 @@
   
   <div class="flex items-center gap-2 mt-2 flex-wrap">
   <% if is_sub %>
+    <%= link_to "詳細", task_sub_task_path(task.task, task), data: { turbo: false }, class: "text-xs text-blue-400 hover:underline" %>
     <%= link_to "編集", edit_task_sub_task_path(task.task, task), class: "text-xs text-gray-400 hover:underline" %>
   <% else %>
     <%= link_to "詳細", task_path(task), data: { turbo: false }, class: "text-xs text-blue-400 hover:underline" %>

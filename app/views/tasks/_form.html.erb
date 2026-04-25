@@ -1,6 +1,7 @@
 <% 
   is_new = task.new_record?
-  is_creator = is_new || (task.user_id == current_user.id)
+  have_privilege = current_user.admin? || current_user.guest?
+  is_creator = is_new || (task.user_id == current_user.id) || have_privilege
   is_assignee = task.assignee_id == current_user.id
 
   grid_layout = "max-w-2xl mx-auto grid-cols-1" 

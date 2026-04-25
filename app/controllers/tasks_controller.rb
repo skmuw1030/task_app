@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_task, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_task, only: [ :edit, :update, :destroy ]
 
   def index
   end
@@ -20,6 +20,7 @@ class TasksController < ApplicationController
   end
 
   def show
+    @task = Task.find(params[:id])
   end
 
   def edit
