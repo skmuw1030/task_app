@@ -1,6 +1,19 @@
-guest_user = User.find_by(email: "guest@example.com")
-suzuki = User.find_by(email: "saburo@gmail.com")
-admin = User.find_by(email: "admin1@gmail.com")
+admin = User.find_or_create_by!(email: "admin1@gmail.com") do |user|
+  user.password = "password01"
+  user.name = "管理者一郎"
+  user.admin = true
+end
+
+guest_user = User.find_or_create_by!(email: "guest@example.com") do |user|
+  user.password = SecureRandom.urlsafe_base64
+  user.name = "ゲストユーザー"
+  user.guest = true
+end
+
+suzuki = User.find_or_create_by!(email: "saburo@gmail.com") do |user|
+  user.password = "password03"
+  user.name = "鈴木三郎"
+end
 
 puts "既存のタスクデータをリセット中"
 SubTask.destroy_all
