@@ -1,35 +1,35 @@
 <% if user_signed_in? %>
-<div class="bg-[#FAFAF9] p-6 min-h-screen">
+  <div class="bg-[#FAFAF9] p-6 min-h-screen">
 
-  <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-center mb-4">
       <h2 class="text-2xl font-bold text-slate-700">My Task Board</h2>
       <%= link_to new_task_path,
-        class: "bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-600" do %>
+          class: "bg-teal-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-600" do %>
         <i class="fa-solid fa-plus mr-1"></i>タスク作成
       <% end %>
-  </div>
+    </div>
 
-  <div class="bg-white border border-gray-200 rounded-xl px-4 py-3 mb-5 flex items-center gap-3 flex-wrap">
-    <p class="text-sm font-medium text-gray-600">
-      <i class="fa-regular fa-clock mr-1"></i>スキマ時間に何する？
-    </p>
-    <div class="flex gap-2 flex-wrap">
-      <% Task::SUKIMA_TIMES.each do |min| %>
-        <%= link_to "#{min}分", root_path(sukima: min),
-            class: "text-xs px-3 py-1 rounded-full border
+    <div class="bg-white border border-gray-200 rounded-xl px-4 py-3 mb-5 flex items-center gap-3 flex-wrap">
+      <p class="text-sm font-medium text-gray-600">
+        <i class="fa-regular fa-clock mr-1"></i>スキマ時間に何する？
+      </p>
+      <div class="flex gap-2 flex-wrap">
+        <% Task::SUKIMA_TIMES.each do |min| %>
+          <%= link_to "#{min}分", root_path(sukima: min),
+              class: "text-xs px-3 py-1 rounded-full border
               #{params[:sukima].to_i == min ?
                 "bg-teal-500 text-white border-teal-500" : "bg-white text-gray-500 border-gray-200 hover:border-teal-300"}" %>
-      <% end %>
-      <% if params[:sukima].present? %>
-        <%= link_to "クリア", root_path,
-            class: "text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200" %>
-      <% end %>
+        <% end %>
+        <% if params[:sukima].present? %>
+          <%= link_to "クリア", root_path,
+              class: "text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200" %>
+        <% end %>
+      </div>
     </div>
-  </div>
 
-  <div class="flex flex-row items-start gap-6 overflow-x-auto pb-4">
+    <div class="flex flex-row items-start gap-6 overflow-x-auto pb-4">
 
-    <div class="flex-1 min-w-[300px] bg-[#F5F3FF] rounded-2xl shadow-sm p-4">
+      <div class="flex-1 min-w-[300px] bg-[#F5F3FF] rounded-2xl shadow-sm p-4">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-purple-900">
             未着手
@@ -39,7 +39,7 @@
           </h3>
           <%= link_to new_task_path(status: "未着手"),
               class: "block items-center text-xs py-2 px-3 bg-purple-200 text-purple-500 rounded-xl hover:bg-purple-300" do %>
-              <i class="fa-solid fa-plus mr-1"></i>タスクを追加
+            <i class="fa-solid fa-plus mr-1"></i>タスクを追加
           <% end %>
         </div>
         <div data-controller="kanban" data-kanban-status-value="未着手" class="min-h-[60vh]">
@@ -47,11 +47,9 @@
             <%= render "task_card", task: task %>
           <% end %>
         </div>
-      
-    </div>
+      </div>
 
-    
-    <div class="flex-1 min-w-[300px] bg-[#EFF6FF] rounded-2xl shadow-sm p-4">
+      <div class="flex-1 min-w-[300px] bg-[#EFF6FF] rounded-2xl shadow-sm p-4">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-blue-900">
             進行中
@@ -65,15 +63,13 @@
           <% end %>
         </div>
         <div data-controller="kanban" data-kanban-status-value="進行中" class="min-h-[60vh]">
-        <% @doing_tasks.each do |task| %>
-          <%= render "task_card", task: task %>
-        <% end %>
+          <% @doing_tasks.each do |task| %>
+            <%= render "task_card", task: task %>
+          <% end %>
+        </div>   
       </div>
-      
-    </div>
 
-
-    <div class="flex-1 min-w-[300px] bg-[#E6FFFA] rounded-2xl shadow-sm p-4">
+      <div class="flex-1 min-w-[300px] bg-[#E6FFFA] rounded-2xl shadow-sm p-4">
         <h3 class="mb-4 text-teal-900 flex items-center gap-1">
           完了
           <span class="bg-[#99F6E4] text-xs px-2 py-1 rounded-full">
@@ -85,25 +81,161 @@
             <%= render "task_card", task: task %>
           <% end %>
         </div>
-    
-    </div>
+      </div>
 
+    </div>
   </div>
-</div>
 
 <% else %>
   <div class="bg-teal-50/30 min-h-screen flex items-center justify-center">
-    <div class="text-center max-w-xl px-6">
-      <h1 class="text-3xl font-bold text-gray-800 mb-2">タスクは付箋からカンバンボードへ</h1>
-      <p class="text-gray-500 mb-8">スキマ時間を有効活用できるようタスクを抽出できるようにしました</p>
-      <div class="flex flex-col gap-3 max-w-xs mx-auto">
+    <div class="max-w-6xl mx-auto px-6 pt-10 pb-20 text-center">
+
+      <h1 class="text-5xl max-md:text-3xl text-gray-900 font-black mb-5">
+        カルテチェックは
+        <span class="block mt-3 text-teal-500">紙管理から看板ボードへ</span>
+      </h1>
+      <p class="text-gray-600 mb-10 max-w-2xl mx-auto">
+        訪問看護での日々の業務で感じた「不便さ」を解消するために作りました
+      </p>
+
+      <div class="flex flex-row max-md:flex-col items-stretch justify-center gap-8">
+
+        <div class="w-full max-w-lg bg-gray-50 border-2 border-red-200 rounded-2xl p-8 shadow-sm overflow-hidden">
+          <div class="relative h-50 mb-5 bg-white rounded-2xl border-2 border-dashed border-gray-200 overflow-hidden">
+            <div class="absolute top-4 left-6 -rotate-12 opacity-80">
+              <i class="fa-regular fa-file-lines drop-shadow text-gray-400 text-6xl"></i>
+            </div>
+            <div class="absolute top-6 right-8 rotate-12 opacity-80">
+              <i class="fa-regular fa-file-lines drop-shadow text-gray-400 text-6xl"></i>
+            </div>
+            <div class="absolute bottom-6 left-10 rotate-6 opacity-80">
+              <i class="fa-regular fa-file-lines drop-shadow text-gray-400 text-6xl"></i>
+            </div>
+            <div class="absolute bottom-8 right-12 -rotate-6 opacity-80">
+              <i class="fa-regular fa-file-lines drop-shadow text-gray-400 text-7xl"></i>
+            </div>
+
+            <div class="absolute inset-0 z-10 flex flex-col items-center justify-center animate-pulse">
+              <div class="relative">
+                <div class="absolute -top-6 -right-6 text-yellow-400">
+                  <i class="fa-solid fa-question text-xl text-yellow-400 rotate-12 drop-shadow-sm"></i>
+                <i class="fa-solid fa-question text-2xl text-yellow-500 -rotate-12 -ml-2 drop-shadow-sm"></i>
+                </div>
+                <div class="absolute -top-2 -left-4 text-blue-400 -rotate-[200deg]">
+                  <i class="fa-solid fa-droplet text-xl"></i>
+                </div>
+                <i class="fa-solid fa-user-nurse text-7xl text-gray-400"></i>
+              </div>
+              <div class="mt-2 px-3 py-1 bg-red-500 text-white text-xs rounded-full font-bold">
+                進捗が掴めない...
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 mb-6">
+            <h3 class="text-xl font-bold text-gray-900">「 大変だった紙管理 」</h3>
+          </div>
+
+          <div class="space-y-4 text-left">
+            <div class="flex gap-4 items-start">
+              <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+              <p class="font-bold text-gray-700">
+                タスクの先送り。
+                <span class="text-sm font-medium text-gray-500">壁に貼った紙は、視界に入らなければ、つい後回しにされてしまう現実。</span>
+              </p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+              <p class="font-bold text-gray-700">
+                不公平感と減算リスク。
+                <span class="text-sm font-medium text-gray-500">真面目な人が損をする。カルテチェックの遅延は、書類不備による減算リスクを招きます。</span>
+              </p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+              <p class="font-bold text-gray-700">
+                進捗が分かりにくい。
+                <span class="text-sm font-medium text-gray-500">紙を見て進捗を把握。チャットでのやり取りは流れてしまい、結局、昼休みや退勤前の貴重な時間を使って一人ひとりに確認するしかありません。</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hidden md:block">
+          <div class="flex h-full items-center justify-center">
+            <i class="fa-solid fa-arrow-right text-teal-500 text-3xl drop-shadow-lg"></i>
+          </div>
+        </div>
+
+        <div class="md:hidden">
+          <div class="flex items-center justify-center">
+            <i class="fa-solid fa-arrow-down text-teal-500 text-2xl drop-shadow-lg"></i>
+          </div>
+        </div>
+
+        <div class="w-full max-w-lg bg-gray-50 border-2 border-teal-200 rounded-2xl p-8 shadow-sm overflow-hidden">
+          <div class="relative h-50 mb-5 bg-white rounded-2xl border-2 border-teal-200 overflow-hidden">
+            <div class="flex h-full p-4 gap-3">
+              <div class="flex-1 bg-gray-100 rounded-xl p-2 flex flex-col gap-2">
+                <div class="w-full h-8 bg-white rounded"></div>
+                <div class="w-full h-8 bg-white rounded"></div>
+              </div>
+              <div class="flex-1 bg-white rounded-xl p-2 flex flex-col gap-2 shadow-xl border border-teal-200">
+                <div class="w-full h-10 bg-teal-500 rounded flex items-center justify-center text-white">
+                  <i class="fa-solid fa-check text-xl"></i>
+                </div>
+              </div>  
+              <div class="flex-1 bg-gray-100 rounded-xl p-2 flex flex-col gap-2">
+                <div class="w-full h-10 bg-white rounded"></div>
+              </div>
+            </div>
+          </div>
+            
+          <div class="flex items-center gap-3 mb-6">
+            <h3 class="text-xl font-bold text-gray-900">「 カンバンボードで楽に 」</h3>
+          </div>
+
+          <div class="space-y-4 text-left">
+            <div class="flex gap-4 items-start">
+              <i class="fa-solid fa-circle-check text-teal-500 mt-1"></i>
+              <p class="font-bold text-gray-700">
+                進捗はパッと見で把握できる。
+                <span class="text-sm font-medium text-gray-500">管理者は全員の状況をすぐに把握。みんなも自分のタスクを把握でき、自律的に動けます。</span>
+              </p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <i class="fa-solid fa-circle-check text-teal-500 mt-1"></i>
+              <p class="font-bold text-gray-700">
+                「今できること」を提案。
+                <span class="text-sm font-medium text-gray-500">スキマ時間を活用。その時間内に終わるタスクを自動抽出し、作業を効率化します。</span>
+              </p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <i class="fa-solid fa-circle-check text-teal-500 mt-1"></i>
+              <p class="font-bold text-gray-700">
+                頑張りが「正しく報われる」仕組み作り。
+                <span class="text-sm font-medium text-gray-500">滞っている人をピンポイントでフォロー。特定の人への負担集中を防ぎ、ステーション全体を守ります。</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+          
+      <div class="mt-8 flex flex-col gap-4 max-w-sm mx-auto">
         <%= link_to "新規登録", new_user_registration_path,
-            class: "block bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-600 font-medium" %>
-        <%= link_to "ログイン", new_user_session_path,
-            class: "block border border-teal-500 text-teal-600 py-3 rounded-lg hover:bg-teal-50 font-medium" %>
-        <%= button_to "ゲストログイン", guest_sign_in_path,
-            method: :post,
-            class: "block w-full bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 font-medium" %>
+            class: "block bg-teal-500 text-white py-4 rounded-xl hover:bg-teal-600 font-bold text-lg shadow-lg" %>
+
+        <div class="flex gap-3 w-full">
+          <%= link_to "ログイン", new_user_session_path,
+              class: "flex-1 flex items-center justify-center border border-teal-500 text-teal-600 py-3 rounded-xl hover:bg-teal-50 font-bold text-sm" %>
+    
+          <div class="flex-1">
+            <%= button_to "ゲストログイン", guest_sign_in_path,
+                method: :post,
+                class: "w-full bg-gray-200 text-gray-700 py-3 rounded-xl hover:bg-gray-300 font-bold text-sm" %>
+          </div>
+        </div>
       </div>
     </div>
   </div>

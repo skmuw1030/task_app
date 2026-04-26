@@ -1,46 +1,46 @@
 <div class="bg-teal-50 flex min-h-screen items-center justify-center pb-14">
   <div class="bg-white p-7 rounded-lg shadow-lg w-full max-w-md">
 
-<h2 class="text-center mb-10 font-bold text-lg text-slate-800">ログイン</h2>
+    <h2 class="text-center mb-10 font-bold text-lg text-slate-800">ログイン</h2>
 
-<% if flash[:alert] %>
-  <div class="w-[85%] mx-auto mb-6 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm flex items-center">
-  <%= flash[:alert] %>
-  </div>
-<% end %>
+    <% if flash[:alert] %>
+      <div class="w-[85%] mx-auto mb-6 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm flex items-center">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="mb-6 w-full">
-    <%= f.label :email, class: "block w-[85%] mx-auto mb-2 font-semibold text-left text-slate-600 text-sm" %>
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", 
-        class: "block w-[85%] mx-auto p-3 rounded-lg text-base border border-slate-200 outline-none focus:border-green-600 focus:shadow-md" %>
-    
-  </div>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class="mb-6 w-full">
+        <%= f.label :email, class: "block w-[85%] mx-auto mb-2 font-semibold text-left text-slate-600 text-sm" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", 
+            class: "block w-[85%] mx-auto p-3 rounded-lg text-base border border-slate-200 outline-none focus:border-green-600 focus:shadow-md" %>
+      </div>
 
-  <div class="mb-6 w-full">
-    <%= f.label :password, class: "block w-[85%] mx-auto mb-2 font-semibold text-left text-slate-600 text-sm" %>
-    <%= f.password_field :password, autocomplete: "current-password", 
-        class: "block w-[85%] mx-auto p-3 rounded-lg text-base border border-slate-200 outline-none focus:border-green-600 focus:shadow-md" %>
+      <div class="mb-6 w-full">
+        <%= f.label :password, class: "block w-[85%] mx-auto mb-2 font-semibold text-left text-slate-600 text-sm" %>
+        <%= f.password_field :password, autocomplete: "current-password", 
+            class: "block w-[85%] mx-auto p-3 rounded-lg text-base border border-slate-200 outline-none focus:border-green-600 focus:shadow-md" %>
    
+        <div class="w-[85%] mt-1 mx-auto text-right">
+          <%= link_to "パスワードをお忘れの方", new_password_path(resource_name), class: "text-sm text-gray-600 hover:underline hover:text-teal-500" %>
+        </div>
+      </div>
 
-    <div class="w-[85%] mt-1 mx-auto text-right">
-      <%= link_to "パスワードをお忘れの方", new_password_path(resource_name), class: "text-sm text-gray-600 hover:underline hover:text-teal-500" %>
-    </div>
-  </div>
+      <% if devise_mapping.rememberable? %>
+        <div class="w-[85%] my-4 mx-auto flex items-center text-base text-gray-600">
+          <%= f.check_box :remember_me, class:"mr-2" %>
+          <%= f.label :remember_me, "ログイン状態を維持する" %>
+        </div>
+      <% end %>
 
-  <% if devise_mapping.rememberable? %>
-    <div class="w-[85%] my-4 mx-auto flex items-center text-base text-gray-600">
-      <%= f.check_box :remember_me, class:"mr-2" %>
-      <%= f.label :remember_me, "ログイン状態を維持する" %>
-    </div>
-  <% end %>
+      <div class="flex justify-center w-full mt-8">
+        <%= f.submit "ログイン", class: "w-[85%] p-3 rounded-lg bg-teal-500 text-white font-bold border-none text-base shadow-md hover:bg-teal-400" %>
+      </div>
+    <% end %>
 
-  <div class="flex justify-center w-full mt-8">
-    <%= f.submit "ログイン", class: "w-[85%] p-3 rounded-lg bg-teal-500 text-white font-bold border-none text-base shadow-md hover:bg-teal-400" %>
-  </div>
-<% end %>
-
-<div class="mt-5 text-center text-gray-600 text-sm">
+    <div class="mt-5 text-center text-gray-600 text-sm">
       アカウントをお持ちでない方は 
       <%= link_to "新規登録", new_registration_path(resource_name), class: "text-teal-500 font-bold ml-0.5 hover:underline" %>
     </div>
+  </div>
+</div>
