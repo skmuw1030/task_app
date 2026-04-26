@@ -16,7 +16,7 @@ class Task < ApplicationRecord
   validates :assignee_id, presence: true
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :priority, presence: true, inclusion: { in: PRIORITIES }
-  validate :due_date_today_or_future
+  validate :due_date_today_or_future, if: -> { new_record? || due_date_changed? }
   validates :estimated_minutes,
             numericality: { only_integer: true, greater_than_or_equal_to: 0 },
             allow_nil: true
@@ -109,6 +109,7 @@ class Task < ApplicationRecord
 
   def due_date_today_or_future
     return if due_date.blank?
+    return if status == "完了"
 
     if due_date < Date.today
       errors.add(:due_date, "は本日以降の日付にしてください")

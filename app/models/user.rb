@@ -17,6 +17,18 @@ class User < ApplicationRecord
     message: "は英字と数字の両方を含めて8文字以上で設定してください"
   }, if: :password_required?
 
+  def self.guest
+    find_or_create_by!(email: "guest@example.com") do | user |
+      user.password = SecureRandom.urlsafe_base64
+      user.name = "ゲストユーザー"
+      user.guest = true
+    end
+  end
+
+  def guest?
+    guest
+  end
+
   private
 
   def password_required?

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Users::RegistrationsController < Devise::RegistrationsController
+  before_action :check_guest, only: [ :update, :destroy ]
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
@@ -29,6 +30,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
       redirect_to root_path, notice: "アカウント削除しました", status: :see_other
     else
       render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def check_guest
+    if current_user.guest?
+      redirect_to root_path, alert: "ゲストユーザーはアカウントの更新や削除はできません"
     end
   end
 

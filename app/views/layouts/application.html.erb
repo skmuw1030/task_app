@@ -20,13 +20,18 @@
   </head>
 
   <body>
-    <% unless devise_controller? %>
-      <div class="flash-messages">
-        <% flash.each do |type, message| %>
-          <div class="flash-item <%= type %>"><%= message %></div>
+    <div class="fixed top-5 w-full flex justify-center z-50">
+      <div class="w-full max-w-sm px-4">
+        <% flash.each do |message_type, message| %>
+          <div class="mb-4 p-4 rounded-lg shadow-lg 
+            <%= message_type == "notice" ? "bg-white text-teal-700" : "bg-white text-red-700" %>">
+            <div class="flex items-center">
+              <span class="text-sm font-medium"><%= message %></span>
+            </div>
+          </div>
         <% end %>
       </div>
-    <% end %>
+    </div>
 
     <header class="bg-white flex items-center h-15 border-b border-gray-100 ">
       <div class="w-full mx-auto px-5 flex justify-between items-center ">
@@ -47,7 +52,13 @@
                   <% end %>
                 <% end %>
                 <%= link_to "作成したタスク一覧", created_tasks_path, class: "block w-full py-3 px-4 text-sm text-left border-none bg-none text-gray-600 hover:bg-teal-50 hover:text-teal-500 whitespace-nowrap" %>
-                <%= link_to "アカウント設定", edit_user_registration_path, class: "block w-full py-3 px-4 text-sm text-left border-none bg-none text-gray-600 hover:bg-teal-50 hover:text-teal-500" %>
+                <% unless current_user.guest? %>
+                  <%= link_to "アカウント設定", edit_user_registration_path, class: "block w-full py-3 px-4 text-sm text-left border-none bg-none text-gray-600 hover:bg-teal-50 hover:text-teal-500" %>
+                <% else %>
+                  <p class="text-xs text-gray-600 text-left py-3 px-4 hover:bg-teal-50 hover:text-teal-500"">
+                    ※ゲストユーザーはアカウント編集・削除が制限されています
+                  </p>
+                <% end %>
                 <hr class="border-0 m-0 border-t border-slate-100">
                 <button type="button" onclick="openLogoutModal()" class="block w-full py-3 px-4 text-sm text-left border-none bg-none  text-red-600 hover:bg-red-50 hover:text-red-700" >
                   ログアウト
