@@ -3,9 +3,6 @@
 // ./bin/rails generate stimulus controllerName
 
 import { application } from "./application"
+import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
 
-import HelloController from "controllers/hello_controller"
-application.register("hello", HelloController)
-
-import KanbanController from "controllers/kanban_controller"
-application.register("kanban", KanbanController)
+eagerLoadControllersFrom("controllers", application)
