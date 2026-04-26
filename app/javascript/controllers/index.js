@@ -4,8 +4,8 @@
 
 import { application } from "./application"
 
-import HelloController from "./hello_controller"
+import HelloController from "controllers/hello_controller"
 application.register("hello", HelloController)
 
-import KanbanController from "./kanban_controller"
+import KanbanController from "controllers/kanban_controller"
 application.register("kanban", KanbanController)
