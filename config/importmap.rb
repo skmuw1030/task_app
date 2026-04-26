@@ -6,5 +6,5 @@ pin "@hotwired/stimulus", to: "stimulus.min.js"
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
 
-pin "sortablejs", to: "https://cdn.jsdelivr.net/npm/sortablejs@latest/modular/sortable.esm.js"
+pin "sortablejs", to: "sortable.js"
 pin "@rails/request.js", to: "request.js"
