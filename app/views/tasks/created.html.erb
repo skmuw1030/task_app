@@ -42,34 +42,35 @@
           <th class="px-4 py-2 text-sm font-medium text-gray-500">優先度</th>
           <th class="px-4 py-2 text-sm font-medium text-gray-500">期限日</th>
           <th class="px-4 py-2 text-sm font-medium text-gray-500">子タスク</th>
+          <th class="px-4 py-2 text-sm font-medium text-gray-500">操作</th>
         </tr>
       </thead>
       <tbody>
       <% if @all_created_tasks.any? %>
         <% @all_created_tasks.each do |task| %>
           <%
-              is_sub = task.is_a?(SubTask)
-              priority_config = case task.priority
-                                when "高"
+            is_sub = task.is_a?(SubTask)
+            priority_config = case task.priority
+                              when "高"
                                 { class: "bg-red-50 text-red-700 border-red-100", label: "高" }
-                                when "中"
+                              when "中"
                                 { class: "bg-yellow-50 text-yellow-700 border-yellow-100", label: "中" }
-                                else
+                              else
                                 { class: "bg-green-50 text-green-700 border-green-100", label: "低" }
-                                end
-              status_config = case task.status
-                                when "未着手"
-                                { class: "bg-[#DDD6FE] text-purple-900 border-purple-100", label:"未着手" }
-                                when "進行中"
-                                { class: "bg-[#BFDBFE] text-blue-900 border-blue-100", label:"進行中" }
-                                else 
-                                { class: "bg-[#99F6E4] text-teal-900 border-teal-100", label:"完了" }
-                                end
-              color_code_due = case task.due_status
-                                when :overdue then "text-red-500 font-medium"
-                                when :urgent then "text-yellow-500"
-                                else ""
-                                end
+                              end
+            status_config = case task.status
+                            when "未着手"
+                              { class: "bg-[#DDD6FE] text-purple-900 border-purple-100", label:"未着手" }
+                            when "進行中"
+                              { class: "bg-[#BFDBFE] text-blue-900 border-blue-100", label:"進行中" }
+                            else 
+                              { class: "bg-[#99F6E4] text-teal-900 border-teal-100", label:"完了" }
+                            end
+            color_code_due = case task.due_status
+                              when :overdue then "text-red-500 font-medium"
+                              when :urgent then "text-yellow-500"
+                              else ""
+                              end
           %>
           <tr class="hover:bg-gray-50">
             <td class="px-4 py-2">
