@@ -36,7 +36,7 @@ class SubTasksController < ApplicationController
 
   def destroy
     @sub_task.destroy
-    redirect_to root_path, notice: "タスクを削除しました", status: :see_other
+    redirect_to created_tasks_path, notice: "タスクを削除しました", status: :see_other
   end
 
   def update_with_timestamps(new_status)
