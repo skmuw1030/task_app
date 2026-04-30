@@ -8,10 +8,6 @@ export default class extends Controller {
 
 
   connect(){
-
-    console.log("connected")
-    console.log(typeof Sortable)
-
     this.sortable = Sortable.default.create(this.element, {
       group: "kanban",
       animation: 100,
@@ -35,6 +31,11 @@ export default class extends Controller {
       contentType: "application/json",
       responseKind: "json"
     })
+
+  if (response.ok) {
+    window.location.reload()
+  }
+
 
   if (!response.ok) {
     alert("保存に失敗しました。ページを再読み込みします")
