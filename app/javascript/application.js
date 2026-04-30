@@ -4,4 +4,3 @@ import "controllers"
 
 import "sortablejs"
 import "@rails/request.js"
-import "./flash"
