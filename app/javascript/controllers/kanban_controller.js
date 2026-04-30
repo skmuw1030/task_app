@@ -2,8 +2,10 @@ import { Controller } from "@hotwired/stimulus"
 import Sortable from "sortablejs"
 import { patch } from "@rails/request.js"
 
+
 export default class extends Controller {
   static values = { status: String }
+
 
   connect(){
     this.sortable = Sortable.create(this.element, {

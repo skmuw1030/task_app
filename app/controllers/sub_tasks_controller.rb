@@ -35,7 +35,7 @@ class SubTasksController < ApplicationController
   end
 
   def destroy
-     @sub_task.destroy
+    @sub_task.destroy
     redirect_to root_path, notice: "タスクを削除しました", status: :see_other
   end
 
@@ -60,8 +60,6 @@ class SubTasksController < ApplicationController
     @sub_task = SubTask.find(params[:id])
     @task = @sub_task.task
   end
-
-
 
   private
 

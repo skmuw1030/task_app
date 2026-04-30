@@ -42,7 +42,6 @@ class Task < ApplicationRecord
     save
   end
 
-
   def due_status
     return :none unless due_date
     return :done if status == "完了"
@@ -94,16 +93,12 @@ class Task < ApplicationRecord
     "#{done_sub_tasks_count} / #{total_sub_tasks_count} 完了"
   end
 
-
-
   def fit_in_time?(minutes)
     return false if minutes.nil?
     return false if estimated_minutes.nil?
 
     estimated_minutes <= minutes.to_i
   end
-
-
 
   private
 

@@ -75,7 +75,6 @@ class SubTask < ApplicationRecord
     true
   end
 
-
   private
 
   def due_date_today_or_future
