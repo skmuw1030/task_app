@@ -23,7 +23,7 @@
     <div class="fixed top-5 w-full flex justify-center z-50">
       <div class="w-full max-w-sm px-4">
         <% flash.each do |message_type, message| %>
-          <div class="flash-message mb-4 p-4 rounded-lg shadow-lg 
+          <div data-controller="flash" class="mb-4 p-4 rounded-lg shadow-lg 
             <%= message_type == "notice" ? "bg-white text-teal-700" : "bg-white text-red-700" %>">
             <div class="flex items-center">
               <span class="text-sm font-medium"><%= message %></span>
