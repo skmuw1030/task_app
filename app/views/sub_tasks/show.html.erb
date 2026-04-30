@@ -78,11 +78,11 @@
           </div>
           <div>
             <p class="text-xs text-gray-400 mb-1">着手日</p>
-            <p><%= @task.started_at&.strftime("%m/%d") || "未着手" %></p>
+            <p><%= @sub_task.started_at&.strftime("%m/%d") || "未着手" %></p>
           </div>
           <div>
             <p class="text-xs text-gray-400 mb-1">完了日</p>
-            <p><%= @task.completed_at&.strftime("%m/%d") || "—" %></p>
+            <p><%= @sub_task.completed_at&.strftime("%m/%d") || "—" %></p>
           </div>
           <div>
             <p class="text-xs text-gray-400 mb-1">ステータス</p>
