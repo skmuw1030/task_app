@@ -8,6 +8,10 @@ export default class extends Controller {
 
 
   connect(){
+
+    console.log("connected")
+    console.log(typeof Sortable)
+    
     this.sortable = Sortable.create(this.element, {
       group: "kanban",
       animation: 100,
