@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import Sortable from "sortablejs"
+import * as Sortable from "sortablejs"
 import { patch } from "@rails/request.js"
 
 
@@ -11,8 +11,8 @@ export default class extends Controller {
 
     console.log("connected")
     console.log(typeof Sortable)
-    
-    this.sortable = Sortable.create(this.element, {
+
+    this.sortable = Sortable.default.create(this.element, {
       group: "kanban",
       animation: 100,
       onEnd: this.onEnd.bind(this)
