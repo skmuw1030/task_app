@@ -22,7 +22,7 @@ export default class extends Controller {
     const modelName = item.dataset.model
     const newStatus = to.dataset.kanbanStatusValue
 
-    console.log({ taskId, newStatus })
+    
 
     const url = `/${modelName}/${taskId}/update_status`
 
@@ -33,7 +33,26 @@ export default class extends Controller {
     })
 
   if (response.ok) {
-    window.location.reload()
+
+    if (newStatus === "完了"){
+      const rect = item.getBoundingClientRect()
+
+      const x = (rect.left + rect.width / 2) / window.innerWidth
+      const y = (rect.top + rect.height / 2) / window.innerHeight
+      confetti({
+        particleCount: 40,
+        spread: 20,
+        drift: -1,
+        origin: {
+          x: x,
+          y: y
+        }
+      })
+    }
+
+    setTimeout(() => {
+      window.location.reload()
+    }, 500)
   }
 
 
