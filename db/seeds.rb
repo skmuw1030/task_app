@@ -5,7 +5,7 @@ admin = User.find_or_create_by!(email: "admin1@gmail.com") do |user|
 end
 
 guest_user = User.find_or_create_by!(email: "guest@example.com") do |user|
-  user.password = SecureRandom.urlsafe_base64
+  user.password = "Password1"
   user.name = "ゲストユーザー"
   user.guest = true
 end
